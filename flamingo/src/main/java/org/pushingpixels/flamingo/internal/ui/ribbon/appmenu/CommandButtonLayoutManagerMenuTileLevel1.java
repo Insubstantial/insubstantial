@@ -133,12 +133,14 @@ public class CommandButtonLayoutManagerMenuTileLevel1 implements
 		if (ltr) {
 			int x = ins.left;
 			// small icon, 1-line text, 1-line extra text and action arrow
-			result.iconRect.x = x;
-			result.iconRect.y = (height - buttonIcon.getIconHeight()) / 2;
-			result.iconRect.width = buttonIcon.getIconWidth();
-			result.iconRect.height = buttonIcon.getIconHeight();
+			if (buttonIcon != null) {
+				result.iconRect.x = x;
+				result.iconRect.y = (height - buttonIcon.getIconHeight()) / 2;
+				result.iconRect.width = buttonIcon.getIconWidth();
+				result.iconRect.height = buttonIcon.getIconHeight();
 
-			x += commandButton.getIcon().getIconWidth();
+				x += buttonIcon.getIconWidth();
+			}
 			if (buttonKind == JCommandButton.CommandButtonKind.ACTION_AND_POPUP_MAIN_POPUP) {
 				result.actionClickArea.x = 0;
 				result.actionClickArea.y = 0;
@@ -209,12 +211,14 @@ public class CommandButtonLayoutManagerMenuTileLevel1 implements
 		} else {
 			int x = commandButton.getWidth() - ins.right;
 			// small icon, 1-line text, 1-line extra text and action arrow
-			result.iconRect.x = x - buttonIcon.getIconWidth();
-			result.iconRect.y = (height - buttonIcon.getIconHeight()) / 2;
-			result.iconRect.width = buttonIcon.getIconWidth();
-			result.iconRect.height = buttonIcon.getIconHeight();
+			if (buttonIcon != null) {
+				result.iconRect.x = x - buttonIcon.getIconWidth();
+				result.iconRect.y = (height - buttonIcon.getIconHeight()) / 2;
+				result.iconRect.width = buttonIcon.getIconWidth();
+				result.iconRect.height = buttonIcon.getIconHeight();
 
-			x -= commandButton.getIcon().getIconWidth();
+				x -= buttonIcon.getIconWidth();
+			}
 			if (buttonKind == JCommandButton.CommandButtonKind.ACTION_AND_POPUP_MAIN_POPUP) {
 				result.actionClickArea.x = x + layoutHGap;
 				result.actionClickArea.y = 0;
