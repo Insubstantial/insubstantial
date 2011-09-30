@@ -434,6 +434,14 @@ public class FlamingoUtilities {
 		return false;
 	}
 
+	/**
+	 * Handles updating the application menu button icon image. If
+	 * <code>ribbonFrame</code> does not have an application menu button nothing
+	 * is performed.
+	 * 
+	 * @param ribbonFrame
+	 *            the ribbon frame containing the application icon
+	 */
 	public static void updateRibbonFrameIconImages(JRibbonFrame ribbonFrame) {
 		JRibbonApplicationMenuButton appMenuButton = getApplicationMenuButton(ribbonFrame);
 		if (appMenuButton == null) {
@@ -446,6 +454,16 @@ public class FlamingoUtilities {
 		}
 	}
 
+	/**
+	 * Recursively searches the <code>comp</code> child components for a
+	 * <code>JRibbonApplicationMenuButton</code> and returns it. If nothing is
+	 * found <code>null</code> is returned.
+	 * 
+	 * @param comp
+	 *            the component to recursively search
+	 * @return the <code>JRibbonApplicationMenuButton</code>, or
+	 *         <code>null</code> if not found
+	 */
 	public static JRibbonApplicationMenuButton getApplicationMenuButton(
 			Component comp) {
 		if (comp instanceof JRibbonApplicationMenuButton)

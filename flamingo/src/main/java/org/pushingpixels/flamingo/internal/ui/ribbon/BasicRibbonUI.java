@@ -48,6 +48,7 @@ import javax.swing.plaf.basic.BasicGraphicsUtils;
 
 import org.pushingpixels.flamingo.api.common.*;
 import org.pushingpixels.flamingo.api.common.JCommandButton.CommandButtonKind;
+import org.pushingpixels.flamingo.api.common.icon.ResizableIcon;
 import org.pushingpixels.flamingo.api.common.popup.JPopupPanel;
 import org.pushingpixels.flamingo.api.common.popup.PopupPanelManager;
 import org.pushingpixels.flamingo.api.common.popup.PopupPanelManager.PopupEvent;
@@ -2144,4 +2145,11 @@ public class BasicRibbonUI extends RibbonUI {
 		taskToggleButtonsScrollablePanel.scrollToIfNecessary(loc.x,
 				taskToggleButton.getWidth());
 	}
+	
+	@Override
+	public synchronized void setApplicationIcon(ResizableIcon applicationIcon) {
+		super.setApplicationIcon(applicationIcon);
+		applicationMenuButton.setIcon(applicationIcon);
+	}
+	
 }

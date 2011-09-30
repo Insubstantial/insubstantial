@@ -34,6 +34,7 @@ import java.awt.event.MouseWheelEvent;
 
 import javax.swing.plaf.ComponentUI;
 
+import org.pushingpixels.flamingo.api.common.icon.ResizableIcon;
 import org.pushingpixels.flamingo.api.ribbon.JRibbon;
 import org.pushingpixels.flamingo.api.ribbon.RibbonContextualTaskGroup;
 
@@ -43,6 +44,10 @@ import org.pushingpixels.flamingo.api.ribbon.RibbonContextualTaskGroup;
  * @author Kirill Grouchnikov
  */
 public abstract class RibbonUI extends ComponentUI {
+
+	/** The application icon. This is displayed in the application menu button. */
+	public ResizableIcon applicationIcon;
+
 	/**
 	 * Returns the bounds of the specified contextual task group.
 	 * 
@@ -58,4 +63,28 @@ public abstract class RibbonUI extends ComponentUI {
 	public abstract boolean isShowingScrollsForBands();
 
 	public abstract void handleMouseWheelEvent(MouseWheelEvent e);
+
+	/**
+	 * Returns the application icon. This is displayed on the application menu
+	 * button.
+	 * 
+	 * @return the application icon
+	 */
+	public synchronized ResizableIcon getApplicationIcon() {
+		return applicationIcon;
+	}
+
+	/**
+	 * Sets the application icon. This is displayed on the application menu
+	 * button.
+	 * <p>
+	 * There is no check performed to see if <code>applicationIcon</code> is
+	 * <code>null</code>.
+	 * 
+	 * @param applicationIcon
+	 *            the application icon to set
+	 */
+	public synchronized void setApplicationIcon(ResizableIcon applicationIcon) {
+		this.applicationIcon = applicationIcon;
+	}
 }

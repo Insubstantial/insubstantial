@@ -48,13 +48,15 @@ import org.pushingpixels.flamingo.internal.ui.common.BasicCommandButtonUI;
  * 
  * @author Kirill Grouchnikov
  */
+@SuppressWarnings("serial")
 public class JRibbonApplicationMenuButton extends JCommandButton {
+
+	/** The application ribbon this menu button is for */
 	private JRibbon ribbon;
-	/**
-	 * The UI class ID string.
-	 */
+	/** The UI class ID string. */
 	public static final String uiClassID = "RibbonApplicationMenuButtonUI";
-    static final int APP_BUTTON_SIZE = Integer.getInteger("peacock.appButtonSize", 24);
+	static final int APP_BUTTON_SIZE = Integer.getInteger(
+			"peacock.appButtonSize", 24);
 
 	private final static CommandButtonDisplayState APP_MENU_BUTTON_STATE = new CommandButtonDisplayState(
 			"Ribbon Application Menu Button", APP_BUTTON_SIZE) {
@@ -63,7 +65,7 @@ public class JRibbonApplicationMenuButton extends JCommandButton {
 				org.pushingpixels.flamingo.api.common.AbstractCommandButton commandButton) {
 			return new CommandButtonLayoutManager() {
 				@Override
-                public int getPreferredIconSize() {
+				public int getPreferredIconSize() {
 					return APP_BUTTON_SIZE;
 				}
 
@@ -76,10 +78,13 @@ public class JRibbonApplicationMenuButton extends JCommandButton {
 							.getWidth(), commandButton.getHeight());
 					result.popupActionRect = new Rectangle(0, 0, 0, 0);
 					ResizableIcon icon = commandButton.getIcon();
-					result.iconRect = new Rectangle(
-							(commandButton.getWidth() - icon.getIconWidth()) / 2,
-							(commandButton.getHeight() - icon.getIconHeight()) / 2,
-							icon.getIconWidth(), icon.getIconHeight());
+					if (icon != null) {
+						result.iconRect = new Rectangle((commandButton
+								.getWidth() - icon.getIconWidth()) / 2,
+								(commandButton.getHeight() - icon
+										.getIconHeight()) / 2, icon
+										.getIconWidth(), icon.getIconHeight());
+					}
 					result.isTextInActionArea = false;
 					return result;
 				}
@@ -106,13 +111,26 @@ public class JRibbonApplicationMenuButton extends JCommandButton {
 	};
 
 	/**
-	 * Creates a new application menu button.
+	 * Constructs a <code>JRibbonApplicationMenuButton</code> specifying the
+	 * ribbon component it belongs to. If the <code>ribbon</code>'s application
+	 * icon is <code>null</code> an {@link EmptyResizableIcon} is used for this
+	 * button.
+	 * <p>
+	 * A <code>JRibbonApplicationMenuButton</code> is a
+	 * {@link CommandButtonKind#POPUP_ONLY} button and uses a custom button
+	 * display state (see {@link #APP_MENU_BUTTON_STATE}).
+	 * 
+	 * @param ribbon
+	 *            the ribbon component
 	 */
 	public JRibbonApplicationMenuButton(JRibbon ribbon) {
-		super("", new EmptyResizableIcon(16));
+		super("", ribbon.getApplicationIcon() != null ? ribbon
+				.getApplicationIcon() : new EmptyResizableIcon(16));
 		this.setCommandButtonKind(CommandButtonKind.POPUP_ONLY);
 		this.setDisplayState(APP_MENU_BUTTON_STATE);
-		this.ribbon = ribbon;
+		setRibbon(ribbon);
+		// update the UI now that the ribbon has been set
+		updateUI();
 	}
 
 	/*
@@ -139,7 +157,24 @@ public class JRibbonApplicationMenuButton extends JCommandButton {
 		return uiClassID;
 	}
 
-	public JRibbon getRibbon() {
+	/**
+	 * Returns a reference to the application ribbon this application menu
+	 * button is for.
+	 * 
+	 * @return the application ribbon
+	 */
+	public synchronized JRibbon getRibbon() {
 		return this.ribbon;
 	}
+
+	/**
+	 * Sets the ribbon this application menu button is created for.
+	 * 
+	 * @param ribbon
+	 *            the application ribbon
+	 */
+	public synchronized void setRibbon(JRibbon ribbon) {
+		this.ribbon = ribbon;
+	}
+
 }

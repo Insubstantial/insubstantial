@@ -30,8 +30,13 @@
 package org.pushingpixels.flamingo.api.ribbon;
 
 import java.awt.Component;
+import java.awt.Dimension;
+import java.awt.Graphics2D;
+import java.awt.Image;
 import java.awt.event.ActionListener;
+import java.lang.reflect.Method;
 import java.util.*;
+import java.util.concurrent.CountDownLatch;
 
 import javax.swing.*;
 import javax.swing.event.ChangeEvent;
@@ -41,6 +46,7 @@ import org.pushingpixels.flamingo.api.common.*;
 import org.pushingpixels.flamingo.api.common.icon.ResizableIcon;
 import org.pushingpixels.flamingo.internal.ui.ribbon.BasicRibbonUI;
 import org.pushingpixels.flamingo.internal.ui.ribbon.RibbonUI;
+import org.pushingpixels.flamingo.internal.utils.FlamingoUtilities;
 
 /**
  * The ribbon component.
@@ -110,16 +116,52 @@ import org.pushingpixels.flamingo.internal.ui.ribbon.RibbonUI;
  * 
  * @author Kirill Grouchnikov
  */
+@SuppressWarnings("serial")
 public class JRibbon extends JComponent {
+
 	/**
-	 * The general tasks.
+	 * The property string used when the {@link #applicationIcon} changes. The
+	 * value is {@value #PROPERTY_APPLICATION_ICON}.
+	 */
+	public static final String PROPERTY_APPLICATION_ICON = "ribbon.icon";
+	/**
+	 * The property string used when the {@link #applicationMenuRichTooltip}
+	 * changes. The value is {@value #PROPERTY_APPLICATION_MENU_RICH_TOOLTIP}.
+	 */
+	public static final String PROPERTY_APPLICATION_MENU_RICH_TOOLTIP = "applicationMenuRichTooltip";
+	/**
+	 * The property string used when the {@link #applicationMenu} changes. The
+	 * value is {@value #PROPERTY_APPLICATION_MENU}.
+	 */
+	public static final String PROPERTY_APPLICATION_MENU = "applicationMenu";
+	/**
+	 * The property string used when the {@link #applicationMenuKeyTip} changes.
+	 * The value is {@value #PROPERTY_APPLICATION_MENU_KEY_TIP}.
+	 */
+	public static final String PROPERTY_APPLICATION_MENU_KEY_TIP = "applicationMenuKeyTip";
+	/**
+	 * The property string used when the {@link #currentlySelectedTask} changes.
+	 * The value is {@value #PROPERTY_SELECTED_TASK}.
+	 */
+	public static final String PROPERTY_SELECTED_TASK = "selectedTask";
+	/**
+	 * The property string used when the {@link #isMinimized} changes. The value
+	 * is {@value #PROPERTY_MINIMIZED}.
+	 */
+	public static final String PROPERTY_MINIMIZED = "minimized";
+
+	/**
+	 * The general tasks for this ribbon.
+	 * <p>
+	 * Tasks that get displayed based on a specific context are contextual
+	 * tasks. See {@link #contextualTaskGroups} for more information about
+	 * contextual tasks.
 	 * 
 	 * @see #addTask(RibbonTask)
 	 * @see #getTaskCount()
 	 * @see #getTask(int)
 	 */
-	private ArrayList<RibbonTask> tasks;
-
+	private LinkedList<RibbonTask> tasks;
 	/**
 	 * The contextual task groups.
 	 * 
@@ -130,7 +172,6 @@ public class JRibbon extends JComponent {
 	 * @see #getContextualTaskGroup(int)
 	 */
 	private ArrayList<RibbonContextualTaskGroup> contextualTaskGroups;
-
 	/**
 	 * The taskbar components (to the right of the application menu button).
 	 * 
@@ -139,17 +180,8 @@ public class JRibbon extends JComponent {
 	 * @see #removeTaskbarComponent(Component)
 	 */
 	private ArrayList<Component> taskbarComponents;
-
-	/**
-	 * Bands of the currently shown task.
-	 */
-	private ArrayList<AbstractRibbonBand> bands;
-
-	/**
-	 * Currently selected (shown) task.
-	 */
+	/** Currently selected (shown) task. */
 	private RibbonTask currentlySelectedTask;
-
 	/**
 	 * Help icon. When not <code>null</code>, the ribbon will display a help
 	 * button at the far right of the tab area.
@@ -159,7 +191,6 @@ public class JRibbon extends JComponent {
 	 * @see #getHelpIcon()
 	 */
 	private ResizableIcon helpIcon;
-
 	/**
 	 * When the {@link #helpIcon} is not <code>null</code>, this listener will
 	 * be invoked when the user activates the help button.
@@ -168,7 +199,6 @@ public class JRibbon extends JComponent {
 	 * @see #getHelpActionListener()
 	 */
 	private ActionListener helpActionListener;
-
 	/**
 	 * Visibility status of the contextual task group. Must contain a value for
 	 * each group in {@link #contextualTaskGroups}.
@@ -177,7 +207,6 @@ public class JRibbon extends JComponent {
 	 * @see #isVisible(RibbonContextualTaskGroup)
 	 */
 	private Map<RibbonContextualTaskGroup, Boolean> groupVisibilityMap;
-
 	/**
 	 * The application menu.
 	 * 
@@ -185,7 +214,6 @@ public class JRibbon extends JComponent {
 	 * @see #getApplicationMenu()
 	 */
 	private RibbonApplicationMenu applicationMenu;
-
 	/**
 	 * The rich tooltip of {@link #applicationMenu} button.
 	 * 
@@ -194,7 +222,6 @@ public class JRibbon extends JComponent {
 	 * @see #getApplicationMenuRichTooltip()
 	 */
 	private RichTooltip applicationMenuRichTooltip;
-
 	/**
 	 * The key tip of {@link #applicationMenu} button.
 	 * 
@@ -203,7 +230,6 @@ public class JRibbon extends JComponent {
 	 * @see #getApplicationMenuKeyTip()
 	 */
 	private String applicationMenuKeyTip;
-
 	/**
 	 * Indicates whether the ribbon is currently minimized.
 	 * 
@@ -211,32 +237,47 @@ public class JRibbon extends JComponent {
 	 * @see #isMinimized()
 	 */
 	private boolean isMinimized;
-
 	/**
 	 * The host ribbon frame. Is <code>null</code> when the ribbon is not hosted
 	 * in a {@link JRibbonFrame}.
+	 * 
+	 * @deprecated Dropped support in order to decouple the <code>JRibbon</code>
+	 *             from the <code>JRibbonFrame</code>
 	 */
+	@Deprecated
 	private JRibbonFrame ribbonFrame;
-
-	/**
-	 * The UI class ID string.
-	 */
+	/** The UI class ID string. */
 	public static final String uiClassID = "RibbonUI";
+	/** The application icon. This is displayed in the application menu button. */
+	public ResizableIcon applicationIcon;
 
 	/**
-	 * Creates a new empty ribbon. Applications are highly encouraged to use
-	 * {@link JRibbonFrame} and access the ribbon with
+	 * Constructs an empty default <code>JRibbon</code>. Applications are highly
+	 * encouraged to use {@link JRibbonFrame} and access the ribbon with
 	 * {@link JRibbonFrame#getRibbon()} API.
 	 */
 	public JRibbon() {
-		this.tasks = new ArrayList<RibbonTask>();
+		this((ResizableIcon) null);
+	}
+
+	/**
+	 * Constructs a <code>JRibbon</code> specifying the application icon. The
+	 * application icon is displayed in the application menu button.
+	 * Applications are highly encouraged to use {@link JRibbonFrame} and access
+	 * the ribbon with {@link JRibbonFrame#getRibbon()} API.
+	 * 
+	 * @param appIcon
+	 *            the application icon
+	 */
+	public JRibbon(ResizableIcon appIcon) {
+		this.tasks = new LinkedList<RibbonTask>();
 		this.contextualTaskGroups = new ArrayList<RibbonContextualTaskGroup>();
 		this.taskbarComponents = new ArrayList<Component>();
-		this.bands = new ArrayList<AbstractRibbonBand>();
 		this.currentlySelectedTask = null;
 		this.groupVisibilityMap = new HashMap<RibbonContextualTaskGroup, Boolean>();
 
 		updateUI();
+		getUI().setApplicationIcon(appIcon);
 	}
 
 	/**
@@ -244,7 +285,10 @@ public class JRibbon extends JComponent {
 	 * 
 	 * @param ribbonFrame
 	 *            Host ribbon frame.
+	 * @deprecated Dropped support in order to decouple the <code>JRibbon</code>
+	 *             from the <code>JRibbonFrame</code>
 	 */
+	@Deprecated
 	JRibbon(JRibbonFrame ribbonFrame) {
 		this();
 		this.ribbonFrame = ribbonFrame;
@@ -252,10 +296,15 @@ public class JRibbon extends JComponent {
 
 	/**
 	 * Adds the specified taskbar component to this ribbon.
+	 * <p>
+	 * Taskbar components are small components placed to the right of the
+	 * application menu. These components usually perform an action common among
+	 * the entire application.
 	 * 
 	 * @param comp
-	 *            The taskbar component to add.
+	 *            the taskbar component to add
 	 * @see #removeTaskbarComponent(Component)
+	 * @see #removeAllTaskbarComponents()
 	 * @see #getTaskbarComponents()
 	 */
 	public synchronized void addTaskbarComponent(Component comp) {
@@ -265,14 +314,14 @@ public class JRibbon extends JComponent {
 			button.setGapScaleFactor(0.5);
 			button.setFocusable(false);
 		}
-		this.taskbarComponents.add(comp);
-		this.fireStateChanged();
+		taskbarComponents.add(comp);
+		fireStateChanged();
 	}
 
-    /*
-     * Added Remove Tasks from patch provided by Jonathan Giles Jan 2009
-     * http://markmail.org/message/vzw3hrntr6qsdlu3
-     */
+	/*
+	 * Added Remove Tasks from patch provided by Jonathan Giles Jan 2009
+	 * http://markmail.org/message/vzw3hrntr6qsdlu3
+	 */
 
 	/**
 	 * Removes the specified taskbar component from this ribbon.
@@ -281,19 +330,24 @@ public class JRibbon extends JComponent {
 	 *            The taskbar component to remove.
 	 * @see #addTaskbarComponent(Component)
 	 * @see #getTaskbarComponents()
+	 * @see #removeAllTaskbarComponents()
 	 */
 	public synchronized void removeTaskbarComponent(Component comp) {
-		this.taskbarComponents.remove(comp);
-		this.fireStateChanged();
+		taskbarComponents.remove(comp);
+		fireStateChanged();
 	}
 
 	/**
-     * Removes all components added to the taskbar of the ribbon.
-     */
-    public void removeAllTaskbarComponents() {
-        this.taskbarComponents.clear();
-        this.fireStateChanged();
-    }
+	 * Removes all components added to the taskbar of the ribbon.
+	 * 
+	 * @see #addTaskbarComponent(Component)
+	 * @see #getTaskbarComponents()
+	 * @see #removeTaskbarComponent(Component)
+	 */
+	public void removeAllTaskbarComponents() {
+		taskbarComponents.clear();
+		fireStateChanged();
+	}
 
 	/**
 	 * Adds the specified task to this ribbon.
@@ -307,62 +361,67 @@ public class JRibbon extends JComponent {
 	public synchronized void addTask(RibbonTask task) {
 		task.setRibbon(this);
 
-		this.tasks.add(task);
+		tasks.add(task);
 
-		if (this.tasks.size() == 1) {
-			this.setSelectedTask(task);
+		if (tasks.size() == 1) {
+			setSelectedTask(task);
+		}
+
+		fireStateChanged();
+	}
+
+	/**
+	 * Removes the task at the specified position, if it represents a valid
+	 * task. Throws an {@link IndexOutOfBoundsException} if not.
+	 * 
+	 * @param pos
+	 *            The position of the task to remove.
+	 */
+	public void removeTask(int pos) {
+		if (pos >= getTaskCount()) {
+			throw new IndexOutOfBoundsException("task position  '" + pos
+					+ "' exceeds number of tasks in ribbon ('" + getTaskCount()
+					+ "')");
+		}
+
+		removeTask(getTask(pos));
+	}
+
+	/**
+	 * Removes the given task from the ribbon. If this is the currently visible
+	 * task, the ribbon will move to the task to its left, unless the removed
+	 * task is the left-most, in which case it will move to the next task to the
+	 * right.
+	 * 
+	 * @param task
+	 *            The ribbon task to be removed from the panel.
+	 * @exception IllegalArgumentException
+	 *                if <code>task</code> is <code>null</code>
+	 */
+	public void removeTask(RibbonTask task) {
+		if (task == null) {
+			throw new IllegalArgumentException("RibbonTask can not be null");
+		}
+
+		int posOfTask = this.tasks.indexOf(task);
+		this.tasks.remove(task);
+
+		if (getSelectedTask().equals(task) && tasks.size() > 0) {
+			RibbonTask newTask = getTask(posOfTask == 0 ? 1 : posOfTask - 1);
+			setSelectedTask(newTask);
 		}
 
 		this.fireStateChanged();
 	}
 
 	/**
-     * Removes the task at the specified position, if it represents a valid task.
-     * Throws an {@link IndexOutOfBoundsException} if not.
-     *
-     * @param pos
-     *             The position of the task to remove.
-     */
-    public void removeTask(int pos) {
-        if (pos >= getTaskCount()) {
-             throw new IndexOutOfBoundsException("task position  '"+pos+"' exceeds number of tasks in ribbon ('"+getTaskCount()+"')");
-        }
-
-        removeTask(getTask(pos));
-    }
-
-    /**
-     * Removes the given task from the ribbon. If this is the currently visible task, the
-     * ribbon will move to the task to its left, unless the removed task is the left-most,
-     * in which case it will move to the next task to the right.
-     *
-     * @param task The ribbon task to be removed from the panel.
-     */
-    public void removeTask(RibbonTask task) {
-        if (task == null) {
-            throw new IllegalArgumentException("RibbonTask can not be null");
-        }
-
-        int posOfTask = this.tasks.indexOf(task);
-        this.tasks.remove(task);
-
-        if (getSelectedTask().equals(task) && tasks.size() > 0) {
-            RibbonTask newTask = getTask(posOfTask == 0 ? 1 : posOfTask
-- 1);
-            setSelectedTask(newTask);
-        }
-
-        this.fireStateChanged();
-    }
-
-    /**
-     * Removes all tasks from the ribbon.
-     */
-    public void removeAllTasks() {
-        this.tasks.clear();
-        this.contextualTaskGroups.clear();
-        this.fireStateChanged();
-    }
+	 * Removes all tasks from the ribbon.
+	 */
+	public void removeAllTasks() {
+		this.tasks.clear();
+		this.contextualTaskGroups.clear();
+		this.fireStateChanged();
+	}
 
 	/**
 	 * Configures the help button of this ribbon.
@@ -427,7 +486,11 @@ public class JRibbon extends JComponent {
 	}
 
 	/**
-	 * Returns the number of regular tasks in <code>this</code> ribbon.
+	 * Returns the number of regular tasks in <code>this</code> ribbon. This
+	 * does not include the contextual ribbon tasks.
+	 * <p>
+	 * To find the total number of ribbon tasks (including contextual ribbon
+	 * tasks) you will have to iterate through the contextual task groups.
 	 * 
 	 * @return Number of regular tasks in <code>this</code> ribbon.
 	 * @see #getTask(int)
@@ -441,8 +504,8 @@ public class JRibbon extends JComponent {
 	 * Retrieves the regular task at specified index.
 	 * 
 	 * @param index
-	 *            Task index.
-	 * @return Task that matches the specified index.
+	 *            task index
+	 * @return the task that matches the specified index
 	 * @see #getTaskCount()
 	 * @see #addTask(RibbonTask)
 	 */
@@ -453,7 +516,7 @@ public class JRibbon extends JComponent {
 	/**
 	 * Returns the number of contextual task groups in <code>this</code> ribbon.
 	 * 
-	 * @return Number of contextual task groups in <code>this</code> ribbon.
+	 * @return number of contextual task groups in <code>this</code> ribbon
 	 * @see #addContextualTaskGroup(RibbonContextualTaskGroup)
 	 * @see #getContextualTaskGroup(int)
 	 */
@@ -465,8 +528,8 @@ public class JRibbon extends JComponent {
 	 * Retrieves contextual task group at specified index.
 	 * 
 	 * @param index
-	 *            Group index.
-	 * @return Group that matches the specified index.
+	 *            group index
+	 * @return group that matches the specified index
 	 * @see #addContextualTaskGroup(RibbonContextualTaskGroup)
 	 * @see #getContextualTaskGroupCount()
 	 */
@@ -483,17 +546,19 @@ public class JRibbon extends JComponent {
 	 * <code>selectedTask</code> property change event.
 	 * 
 	 * @param task
-	 *            Task to select.
+	 *            task to select
 	 * @throws IllegalArgumentException
-	 *             If the specified task is not in the ribbon or not visible.
+	 *             if <code>task</code> is not in the ribbon, is
+	 *             <code>null</code>, or not visible.
 	 * @see #getSelectedTask()
 	 */
 	public synchronized void setSelectedTask(RibbonTask task) {
-		boolean valid = this.tasks.contains(task);
+		// check for task in general tasks
+		boolean valid = tasks.contains(task);
+		// if not a general task, then check contextual tasks
 		if (!valid) {
-			for (int i = 0; i < this.getContextualTaskGroupCount(); i++) {
-				RibbonContextualTaskGroup group = this
-						.getContextualTaskGroup(i);
+			for (int i = 0; i < getContextualTaskGroupCount(); i++) {
+				RibbonContextualTaskGroup group = getContextualTaskGroup(i);
 				if (!this.isVisible(group))
 					continue;
 				for (int j = 0; j < group.getTaskCount(); j++) {
@@ -512,26 +577,26 @@ public class JRibbon extends JComponent {
 							+ "part of this ribbon or not marked as visible");
 		}
 
-		for (AbstractRibbonBand ribbonBand : this.bands) {
-			ribbonBand.setVisible(false);
+		if (currentlySelectedTask != null) {
+			for (AbstractRibbonBand<?> ribbonBand : currentlySelectedTask
+					.getBands()) {
+				ribbonBand.setVisible(false);
+			}
 		}
-		this.bands.clear();
 
 		for (int i = 0; i < task.getBandCount(); i++) {
-			AbstractRibbonBand ribbonBand = task.getBand(i);
+			AbstractRibbonBand<?> ribbonBand = task.getBand(i);
 			ribbonBand.setVisible(true);
-			this.bands.add(ribbonBand);
 		}
 
-		RibbonTask old = this.currentlySelectedTask;
-		this.currentlySelectedTask = task;
+		RibbonTask old = currentlySelectedTask;
+		currentlySelectedTask = task;
 
-		this.revalidate();
-		this.repaint();
+		revalidate();
+		repaint();
 
-		this
-				.firePropertyChange("selectedTask", old,
-						this.currentlySelectedTask);
+		firePropertyChange(PROPERTY_SELECTED_TASK, old,
+				this.currentlySelectedTask);
 	}
 
 	/**
@@ -700,7 +765,7 @@ public class JRibbon extends JComponent {
 			if (this.applicationMenu != null) {
 				this.applicationMenu.setFrozen();
 			}
-			this.firePropertyChange("applicationMenu", old,
+			this.firePropertyChange(PROPERTY_APPLICATION_MENU, old,
 					this.applicationMenu);
 		}
 	}
@@ -727,7 +792,7 @@ public class JRibbon extends JComponent {
 	public synchronized void setApplicationMenuRichTooltip(RichTooltip tooltip) {
 		RichTooltip old = this.applicationMenuRichTooltip;
 		this.applicationMenuRichTooltip = tooltip;
-		this.firePropertyChange("applicationMenuRichTooltip", old,
+		this.firePropertyChange(PROPERTY_APPLICATION_MENU_RICH_TOOLTIP, old,
 				this.applicationMenuRichTooltip);
 	}
 
@@ -754,7 +819,7 @@ public class JRibbon extends JComponent {
 	public synchronized void setApplicationMenuKeyTip(String keyTip) {
 		String old = this.applicationMenuKeyTip;
 		this.applicationMenuKeyTip = keyTip;
-		this.firePropertyChange("applicationMenuKeyTip", old,
+		this.firePropertyChange(PROPERTY_APPLICATION_MENU_KEY_TIP, old,
 				this.applicationMenuKeyTip);
 	}
 
@@ -793,7 +858,7 @@ public class JRibbon extends JComponent {
 		boolean old = this.isMinimized;
 		if (old != isMinimized) {
 			this.isMinimized = isMinimized;
-			this.firePropertyChange("minimized", old, this.isMinimized);
+			this.firePropertyChange(PROPERTY_MINIMIZED, old, this.isMinimized);
 		}
 	}
 
@@ -802,7 +867,10 @@ public class JRibbon extends JComponent {
 	 * <code>null</code>.
 	 * 
 	 * @return The ribbon frame that hosts this ribbon.
+	 * @deprecated Dropped support in order to decouple the <code>JRibbon</code>
+	 *             from the <code>JRibbonFrame</code>
 	 */
+	@Deprecated
 	public JRibbonFrame getRibbonFrame() {
 		return this.ribbonFrame;
 	}
@@ -819,4 +887,48 @@ public class JRibbon extends JComponent {
 					"Can't hide ribbon on JRibbonFrame");
 		super.setVisible(flag);
 	}
+
+	/**
+	 * Returns the application icon. The application icon is displayed on the
+	 * application menu button.
+	 * <p>
+	 * This is a convenience method and is equivalent to
+	 * <code>getUI().getApplicationIcon()</code>.
+	 * 
+	 * @see #getUI()
+	 * @see RibbonUI#getApplicationIcon()
+	 * @see #setApplicationIcon(ResizableIcon)
+	 * @return the application icon
+	 */
+	public synchronized ResizableIcon getApplicationIcon() {
+		return getUI().getApplicationIcon();
+	}
+
+	/**
+	 * Sets the application icon. This is displayed on the application menu
+	 * button.
+	 * <p>
+	 * There is no check performed to see if <code>applicationIcon</code> is
+	 * <code>null</code>.
+	 * <p>
+	 * A <code>PropertyChangeEvent</code> is fired for the
+	 * {@link #PROPERTY_APPLICATION_ICON} property.
+	 * 
+	 * @see #getUI()
+	 * @see RibbonUI#setApplicationIcon(ResizableIcon)
+	 * @see #getApplicationIcon()
+	 * @param applicationIcon
+	 *            the application icon to set
+	 */
+	public synchronized void setApplicationIcon(ResizableIcon applicationIcon) {
+		ResizableIcon old = getUI().getApplicationIcon();
+		getUI().setApplicationIcon(applicationIcon);
+		firePropertyChange(PROPERTY_APPLICATION_ICON, old, this.applicationIcon);
+		// TODO set the application menu button icon
+		// JRibbonApplicationMenuButton button = getApplicationMenuButton();
+		// if (button != null) {
+		// button.setIcon(this.applicationIcon);
+		// }
+	}
+
 }

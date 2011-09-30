@@ -143,24 +143,30 @@ public class JRibbonBand extends AbstractRibbonBand<JBandControlPanel> {
 	};
 
 	/**
-	 * Creates a new ribbon band.
+	 * Constructs a <code>JRibbonBand</code> specifying the title and the icon
+	 * when in the collapsed state.
+	 * <p>
+	 * This is equivalent to <code>JRibbonBand(title, icon, null)</code>.
 	 * 
+	 * @see #JRibbonBand(String, ResizableIcon, ActionListener)
 	 * @param title
-	 *            Band title.
+	 *            band title
 	 * @param icon
-	 *            Associated icon (for collapsed state).
+	 *            the icon displayed when the band collapses
 	 */
 	public JRibbonBand(String title, ResizableIcon icon) {
 		this(title, icon, null);
 	}
 
 	/**
-	 * Creates a new ribbon band.
+	 * Constructs a <code>JRibbonBand</code> specifying the title, the icon when
+	 * in the collapsed state, and the action listener for when the band is
+	 * expanded.
 	 * 
 	 * @param title
-	 *            Band title.
+	 *            band title
 	 * @param icon
-	 *            Associated icon (for collapsed state).
+	 *            the icon displayed when the band collapses
 	 * @param expandActionListener
 	 *            Expand action listener (can be <code>null</code>).
 	 */
@@ -177,9 +183,9 @@ public class JRibbonBand extends AbstractRibbonBand<JBandControlPanel> {
 	 * Adds the specified command button to <code>this</code> band.
 	 * 
 	 * @param commandButton
-	 *            Command button to add.
+	 *            the command button to add
 	 * @param priority
-	 *            Priority of the button.
+	 *            priority of the button
 	 */
 	public void addCommandButton(AbstractCommandButton commandButton,
 			RibbonElementPriority priority) {
@@ -240,7 +246,8 @@ public class JRibbonBand extends AbstractRibbonBand<JBandControlPanel> {
 		gallery.setPreferredPopupPanelDimension(preferredPopupMaxButtonColumns,
 				preferredPopupMaxVisibleButtonRows);
 
-		this.controlPanel.addRibbonGallery(gallery, priority);
+//		this.controlPanel.addRibbonGallery(gallery, priority);
+		addRibbonGallery(gallery, priority);
 	}
 
 	/**
@@ -265,6 +272,31 @@ public class JRibbonBand extends AbstractRibbonBand<JBandControlPanel> {
 		if (gallery == null)
 			return;
 		gallery.addRibbonGalleryButtons(buttonGroupName, buttons);
+	}
+
+	/**
+	 * Adds the <code>gallery</code> to the ribbon band with a priority of
+	 * {@link RibbonElementPriority#TOP}.
+	 * 
+	 * @param gallery
+	 *            the ribbon gallery
+	 */
+	public void addRibbonGallery(JRibbonGallery gallery) {
+		controlPanel.addRibbonGallery(gallery, RibbonElementPriority.TOP);
+	}
+
+	/**
+	 * Adds the <code>gallery</code> to the ribbon band with the specified
+	 * <code>priority</code>.
+	 * 
+	 * @param gallery
+	 *            the ribbon gallery
+	 * @param priority
+	 *            the gallery priority
+	 */
+	public void addRibbonGallery(JRibbonGallery gallery,
+			RibbonElementPriority priority) {
+		controlPanel.addRibbonGallery(gallery, priority);
 	}
 
 	/**
@@ -443,8 +475,8 @@ public class JRibbonBand extends AbstractRibbonBand<JBandControlPanel> {
 	 */
 	@Override
 	public AbstractRibbonBand<JBandControlPanel> cloneBand() {
-		AbstractRibbonBand<JBandControlPanel> result = new JRibbonBand(this
-				.getTitle(), this.getIcon(), this.getExpandActionListener());
+		AbstractRibbonBand<JBandControlPanel> result = new JRibbonBand(
+				this.getTitle(), this.getIcon(), this.getExpandActionListener());
 		result.applyComponentOrientation(this.getComponentOrientation());
 		return result;
 	}

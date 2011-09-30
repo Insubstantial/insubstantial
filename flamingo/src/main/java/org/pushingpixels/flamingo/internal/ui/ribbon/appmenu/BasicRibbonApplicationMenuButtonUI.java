@@ -50,19 +50,68 @@ import org.pushingpixels.flamingo.internal.utils.FlamingoUtilities;
  * @author Kirill Grouchnikov
  */
 public class BasicRibbonApplicationMenuButtonUI extends BasicCommandButtonUI {
-	/*
-	 * (non-Javadoc)
+
+	/** The ribbon this menu button is created for */
+	private JRibbon ribbon;
+	/** The associated application menu button. */
+	protected JRibbonApplicationMenuButton applicationMenuButton;
+
+	/**
+	 * Constructs a <code>BasicRibbonApplicationMenuButtonUI</code> specifying
+	 * the <code>JRibbon</code> the button UI is created for.
 	 * 
-	 * @see javax.swing.plaf.ComponentUI#createUI(javax.swing.JComponent)
+	 * @param ribbon
+	 *            the ribbon
 	 */
-	public static ComponentUI createUI(JComponent c) {
-		return new BasicRibbonApplicationMenuButtonUI();
+	public BasicRibbonApplicationMenuButtonUI(JRibbon ribbon) {
+		setRibbon(ribbon);
 	}
 
 	/**
-	 * The associated application menu button.
+	 * Creates a UI delegate for a {@link JRibbonApplicationMenuButton}. The
+	 * <code>JRibbon</code> the menu button belongs to is required in order to
+	 * create this UI.
+	 * <p>
+	 * The <code>component</code> may be a supported object instance which is a
+	 * <code>JRibbon</code> or has a reference to the application
+	 * <code>JRibbon</code>.
+	 * 
+	 * @see javax.swing.plaf.ComponentUI#createUI(javax.swing.JComponent)
+	 * @param component
+	 *            a <code>JRibbon</code> to be used as criteria for creating the
+	 *            UI for a new <code>BasicRibbonApplicationMenuButtonUI</code>
+	 * @exception IllegalArgumentException
+	 *                if <code>component</code> is not a <code>JRibbon</code>
 	 */
-	protected JRibbonApplicationMenuButton applicationMenuButton;
+	public static ComponentUI createUI(JComponent component) {
+		if (component instanceof JRibbon) {
+			return new BasicRibbonApplicationMenuButtonUI((JRibbon) component);
+		} else if (component instanceof JRibbonApplicationMenuButton) {
+			return new BasicRibbonApplicationMenuButtonUI(
+					((JRibbonApplicationMenuButton) component).getRibbon());
+		}
+		throw new IllegalArgumentException(
+				"creating a BasicRibbonApplicationMenuButtonUI requires a JRibbon");
+	}
+
+	/**
+	 * Returns the ribbon reference this button UI is created for.
+	 * 
+	 * @return the ribbon reference
+	 */
+	public JRibbon getRibbon() {
+		return ribbon;
+	}
+
+	/**
+	 * Sets the ribbon this button UI is created for.
+	 * 
+	 * @param ribbon
+	 *            the ribbon
+	 */
+	protected void setRibbon(JRibbon ribbon) {
+		this.ribbon = ribbon;
+	}
 
 	/*
 	 * (non-Javadoc)
@@ -111,56 +160,64 @@ public class BasicRibbonApplicationMenuButtonUI extends BasicCommandButtonUI {
 	protected void installComponents() {
 		super.installComponents();
 
-		final JRibbonApplicationMenuButton appMenuButton = (JRibbonApplicationMenuButton) this.commandButton;
-		appMenuButton.setPopupCallback(new PopupPanelCallback() {
-			@Override
-			public JPopupPanel getPopupPanel(final JCommandButton commandButton) {
-				JRibbonFrame ribbonFrame = (JRibbonFrame) SwingUtilities
-						.getWindowAncestor(commandButton);
-				final JRibbon ribbon = ribbonFrame.getRibbon();
-				RibbonApplicationMenu ribbonMenu = ribbon.getApplicationMenu();
-				final JRibbonApplicationMenuPopupPanel menuPopupPanel = new JRibbonApplicationMenuPopupPanel(
-						appMenuButton, ribbonMenu);
-				menuPopupPanel.applyComponentOrientation(appMenuButton
-						.getComponentOrientation());
-				menuPopupPanel
-						.setCustomizer(new JPopupPanel.PopupPanelCustomizer() {
-							@Override
-							public Rectangle getScreenBounds() {
-								boolean ltr = commandButton
-										.getComponentOrientation()
-										.isLeftToRight();
+		// we can't set the application menu popup panel if we have no reference
+		// to the application ribbon
+		if (ribbon != null) {
+			final JRibbonApplicationMenuButton appMenuButton = (JRibbonApplicationMenuButton) this.commandButton;
+			appMenuButton.setPopupCallback(new PopupPanelCallback() {
+				@Override
+				public JPopupPanel getPopupPanel(
+						final JCommandButton commandButton) {
+					// JRibbonFrame ribbonFrame = (JRibbonFrame) SwingUtilities
+					// .getWindowAncestor(commandButton);
+					// final JRibbon ribbon = ribbonFrame.getRibbon();
+					RibbonApplicationMenu ribbonMenu = ribbon
+							.getApplicationMenu();
+					final JRibbonApplicationMenuPopupPanel menuPopupPanel = new JRibbonApplicationMenuPopupPanel(
+							appMenuButton, ribbonMenu);
+					menuPopupPanel.applyComponentOrientation(appMenuButton
+							.getComponentOrientation());
+					menuPopupPanel
+							.setCustomizer(new JPopupPanel.PopupPanelCustomizer() {
+								@Override
+								public Rectangle getScreenBounds() {
+									boolean ltr = commandButton
+											.getComponentOrientation()
+											.isLeftToRight();
 
-								int pw = menuPopupPanel.getPreferredSize().width;
-								int x = ltr ? ribbon.getLocationOnScreen().x
-										: ribbon.getLocationOnScreen().x
-												+ ribbon.getWidth() - pw;
-								int y = commandButton.getLocationOnScreen().y
-										+ commandButton.getSize().height / 2
-										+ 2;
+									int pw = menuPopupPanel.getPreferredSize().width;
+									int x = ltr ? ribbon.getLocationOnScreen().x
+											: ribbon.getLocationOnScreen().x
+													+ ribbon.getWidth() - pw;
+									int y = commandButton.getLocationOnScreen().y
+											+ commandButton.getSize().height
+											/ 2 + 2;
 
-								// make sure that the menu popup stays
-								// in bounds
-								Rectangle scrBounds = commandButton
-										.getGraphicsConfiguration().getBounds();
-								if ((x + pw) > (scrBounds.x + scrBounds.width)) {
-									x = scrBounds.x + scrBounds.width - pw;
+									// make sure that the menu popup stays
+									// in bounds
+									Rectangle scrBounds = commandButton
+											.getGraphicsConfiguration()
+											.getBounds();
+									if ((x + pw) > (scrBounds.x + scrBounds.width)) {
+										x = scrBounds.x + scrBounds.width - pw;
+									}
+									int ph = menuPopupPanel.getPreferredSize().height;
+									if ((y + ph) > (scrBounds.y + scrBounds.height)) {
+										y = scrBounds.y + scrBounds.height - ph;
+									}
+
+									return new Rectangle(
+											x,
+											y,
+											menuPopupPanel.getPreferredSize().width,
+											menuPopupPanel.getPreferredSize().height);
 								}
-								int ph = menuPopupPanel.getPreferredSize().height;
-								if ((y + ph) > (scrBounds.y + scrBounds.height)) {
-									y = scrBounds.y + scrBounds.height - ph;
-								}
+							});
 
-								return new Rectangle(
-										x,
-										y,
-										menuPopupPanel.getPreferredSize().width,
-										menuPopupPanel.getPreferredSize().height);
-							}
-						});
-				return menuPopupPanel;
-			}
-		});
+					return menuPopupPanel;
+				}
+			});
+		}
 	}
 
 	/*
@@ -177,9 +234,9 @@ public class BasicRibbonApplicationMenuButtonUI extends BasicCommandButtonUI {
 		// g2d.fillRect(0, 0, c.getWidth(), c.getHeight());
 		Insets ins = c.getInsets();
 		// System.out.println(c.getWidth() + ":" + c.getHeight());
-		this.paintButtonBackground(g2d, new Rectangle(ins.left, ins.top, c
-				.getWidth()
-				- ins.left - ins.right, c.getHeight() - ins.top - ins.bottom));
+		this.paintButtonBackground(g2d,
+				new Rectangle(ins.left, ins.top, c.getWidth() - ins.left
+						- ins.right, c.getHeight() - ins.top - ins.bottom));
 
 		this.layoutInfo = this.layoutManager.getLayoutInfo(this.commandButton,
 				g);
