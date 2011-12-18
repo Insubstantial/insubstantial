@@ -1763,7 +1763,7 @@ public class SubstanceCoreUtilities {
 	public static JComponent getTitlePane(JRootPane rootPane) {
 		JInternalFrame jif = (JInternalFrame) SwingUtilities
 				.getAncestorOfClass(JInternalFrame.class, rootPane);
-		if (jif != null) {
+		if ((jif != null) && (jif.getUI() instanceof SubstanceInternalFrameUI)) {
 			SubstanceInternalFrameUI ui = (SubstanceInternalFrameUI) jif
 					.getUI();
 			return ui.getTitlePane();
