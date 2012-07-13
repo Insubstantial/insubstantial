@@ -31,9 +31,16 @@ package org.pushingpixels.substance.api.colorscheme;
 
 import java.awt.Color;
 
-import org.pushingpixels.substance.api.SchemeDerivedColors;
+import org.pushingpixels.substance.api.SchemeDerivedColorsResolver;
 import org.pushingpixels.substance.api.SubstanceColorScheme;
-import org.pushingpixels.substance.internal.colorscheme.*;
+import org.pushingpixels.substance.internal.colorscheme.HueShiftColorScheme;
+import org.pushingpixels.substance.internal.colorscheme.InvertedColorScheme;
+import org.pushingpixels.substance.internal.colorscheme.NegatedColorScheme;
+import org.pushingpixels.substance.internal.colorscheme.SaturatedColorScheme;
+import org.pushingpixels.substance.internal.colorscheme.ShadeColorScheme;
+import org.pushingpixels.substance.internal.colorscheme.ShiftColorScheme;
+import org.pushingpixels.substance.internal.colorscheme.TintColorScheme;
+import org.pushingpixels.substance.internal.colorscheme.ToneColorScheme;
 import org.pushingpixels.substance.internal.utils.SubstanceColorUtilities;
 
 /**
@@ -55,7 +62,7 @@ public abstract class BaseColorScheme implements SubstanceColorScheme {
 	/**
 	 * Resolver for the derived colors.
 	 */
-	protected SchemeDerivedColors derivedColorsResolver;
+	protected SchemeDerivedColorsResolver derivedColorsResolver;
 
 	/**
 	 * Constructs the basic functionality of a color scheme.
@@ -66,13 +73,51 @@ public abstract class BaseColorScheme implements SubstanceColorScheme {
 	 *            Indication whether the color scheme is dark.
 	 */
 	protected BaseColorScheme(String displayName, boolean isDark) {
-		this.displayName = displayName;
-		this.isDark = isDark;
-		this.derivedColorsResolver = this.isDark ? new DerivedColorsResolverDark(
-				this)
-				: new DerivedColorsResolverLight(this);
+	    this(displayName, isDark, isDark ? DerivedColorsResolverDark.INSTANCE : DerivedColorsResolverLight.INSTANCE);
+	}
+	
+	/**
+     * Constructs the basic functionality of a color scheme.
+     * <p>
+     * Subclasses should typically invoke this constructor.
+     * 
+     * @param displayName
+     *            Display name.
+     * @param derivedColorsResolver
+     *            A resolver that determine how derived colors are derived
+     * @throws NullPointerException
+     *             if {@code derivedColorsResolver} is {@code null}
+     */
+	protected BaseColorScheme(String displayName, SchemeDerivedColorsResolver derivedColorsResolver) {
+	    this(displayName, derivedColorsResolver.isDark(), derivedColorsResolver);
+	}
+	
+	private BaseColorScheme(String displayName, boolean isDark, SchemeDerivedColorsResolver derivedColorsResolver) {
+	    if (derivedColorsResolver == null) {
+	        throw new NullPointerException("derivedColorsResolver cannot be null");
+	    }
+	    
+        this.displayName = displayName;
+        this.isDark = isDark;
+        this.derivedColorsResolver = derivedColorsResolver;
 	}
 
+	    /**
+     * Allows subclasses to determine the best color resolver. This is typically used by color
+     * scheme that wrap other color scheme, such as color shifting or color inversion.
+     * 
+     * @param colorScheme
+     *            the color scheme to test
+     * @return a resolver for the supplied color scheme
+     */
+	protected static SchemeDerivedColorsResolver getResolver(SubstanceColorScheme colorScheme) {
+	    if (colorScheme instanceof BaseColorScheme) {
+	        return ((BaseColorScheme) colorScheme).derivedColorsResolver;
+	    }
+	    
+	    return colorScheme.isDark() ? DerivedColorsResolverDark.INSTANCE : DerivedColorsResolverLight.INSTANCE;
+	}
+	
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -205,7 +250,7 @@ public abstract class BaseColorScheme implements SubstanceColorScheme {
 	 */
 	@Override
     public final Color getBackgroundFillColor() {
-		return derivedColorsResolver.getBackgroundFillColor();
+		return derivedColorsResolver.getBackgroundFillColor(this);
 	}
 
 	/*
@@ -216,7 +261,7 @@ public abstract class BaseColorScheme implements SubstanceColorScheme {
 	 */
 	@Override
 	public final Color getFocusRingColor() {
-		return derivedColorsResolver.getFocusRingColor();
+		return derivedColorsResolver.getFocusRingColor(this);
 	}
 
 	/*
@@ -226,7 +271,7 @@ public abstract class BaseColorScheme implements SubstanceColorScheme {
 	 */
 	@Override
     public final Color getLineColor() {
-		return derivedColorsResolver.getLineColor();
+		return derivedColorsResolver.getLineColor(this);
 	}
 
 	/*
@@ -237,7 +282,7 @@ public abstract class BaseColorScheme implements SubstanceColorScheme {
 	 */
 	@Override
     public final Color getSelectionForegroundColor() {
-		return derivedColorsResolver.getSelectionForegroundColor();
+		return derivedColorsResolver.getSelectionForegroundColor(this);
 	}
 
 	/*
@@ -248,7 +293,7 @@ public abstract class BaseColorScheme implements SubstanceColorScheme {
 	 */
 	@Override
 	public final Color getSelectionBackgroundColor() {
-		return derivedColorsResolver.getSelectionBackgroundColor();
+		return derivedColorsResolver.getSelectionBackgroundColor(this);
 	}
 
 	/*
@@ -260,7 +305,7 @@ public abstract class BaseColorScheme implements SubstanceColorScheme {
 	 */
 	@Override
     public final Color getWatermarkDarkColor() {
-		return derivedColorsResolver.getWatermarkDarkColor();
+		return derivedColorsResolver.getWatermarkDarkColor(this);
 	}
 
 	/*
@@ -272,7 +317,7 @@ public abstract class BaseColorScheme implements SubstanceColorScheme {
 	 */
 	@Override
     public final Color getWatermarkLightColor() {
-		return derivedColorsResolver.getWatermarkLightColor();
+		return derivedColorsResolver.getWatermarkLightColor(this);
 	}
 
 	/*
@@ -284,7 +329,7 @@ public abstract class BaseColorScheme implements SubstanceColorScheme {
 	 */
 	@Override
 	public final Color getWatermarkStampColor() {
-		return derivedColorsResolver.getWatermarkStampColor();
+		return derivedColorsResolver.getWatermarkStampColor(this);
 	}
 
 	/*
@@ -295,7 +340,7 @@ public abstract class BaseColorScheme implements SubstanceColorScheme {
 	 */
 	@Override
 	public final Color getTextBackgroundFillColor() {
-		return derivedColorsResolver.getTextBackgroundFillColor();
+		return derivedColorsResolver.getTextBackgroundFillColor(this);
 	}
 
 	/*

@@ -89,7 +89,7 @@ public class NegatedColorScheme extends BaseColorScheme {
 	 *            The original color scheme.
 	 */
 	public NegatedColorScheme(SubstanceColorScheme origScheme) {
-		super("Negated " + origScheme.getDisplayName(), !origScheme.isDark());
+		super("Negated " + origScheme.getDisplayName(), getResolver(origScheme).invert());
 		this.origScheme = origScheme;
 
 		this.foregroundColor = SubstanceColorUtilities.invertColor(origScheme

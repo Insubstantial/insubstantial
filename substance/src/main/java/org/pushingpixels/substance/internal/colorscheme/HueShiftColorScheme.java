@@ -98,7 +98,7 @@ public class HueShiftColorScheme extends BaseColorScheme {
 	public HueShiftColorScheme(SubstanceColorScheme origScheme,
 			double hueShiftFactor) {
 		super("Hue-shift " + origScheme.getDisplayName() + " "
-				+ (int) (100 * hueShiftFactor) + "%", origScheme.isDark());
+				+ (int) (100 * hueShiftFactor) + "%", getResolver(origScheme));
 		this.hueShiftFactor = hueShiftFactor;
 		this.origScheme = origScheme;
 		this.foregroundColor = SubstanceColorUtilities.getHueShiftedColor(

@@ -90,7 +90,7 @@ public class InvertedColorScheme extends BaseColorScheme {
 	 *            The original color scheme.
 	 */
 	public InvertedColorScheme(SubstanceColorScheme origScheme) {
-		super("Inverted " + origScheme.getDisplayName(), !origScheme.isDark());
+		super("Inverted " + origScheme.getDisplayName(), getResolver(origScheme).invert());
 		this.origScheme = origScheme;
 		this.foregroundColor = SubstanceColorUtilities.invertColor(origScheme
 				.getForegroundColor());

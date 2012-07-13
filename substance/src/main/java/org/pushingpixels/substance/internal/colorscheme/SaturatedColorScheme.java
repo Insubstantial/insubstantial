@@ -99,7 +99,7 @@ public class SaturatedColorScheme extends BaseColorScheme {
 	public SaturatedColorScheme(SubstanceColorScheme origScheme,
 			double saturationFactor) {
 		super("Saturated (" + (int) (100 * saturationFactor) + "%) "
-				+ origScheme.getDisplayName(), origScheme.isDark());
+				+ origScheme.getDisplayName(), getResolver(origScheme));
 		this.saturationFactor = saturationFactor;
 		this.origScheme = origScheme;
 		this.foregroundColor = origScheme.getForegroundColor();

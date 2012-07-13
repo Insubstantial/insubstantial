@@ -33,7 +33,10 @@ import java.awt.Color;
 
 import org.pushingpixels.substance.api.SubstanceColorScheme;
 import org.pushingpixels.substance.api.colorscheme.BaseColorScheme;
-import org.pushingpixels.substance.internal.utils.*;
+import org.pushingpixels.substance.internal.utils.HashMapKey;
+import org.pushingpixels.substance.internal.utils.LazyResettableHashMap;
+import org.pushingpixels.substance.internal.utils.SubstanceColorUtilities;
+import org.pushingpixels.substance.internal.utils.SubstanceCoreUtilities;
 
 /**
  * Base class for shifted color schemes. A shifted color scheme is based on some
@@ -154,8 +157,7 @@ public class ShiftColorScheme extends BaseColorScheme {
 				+ backgroundShiftColor + "] "
 				+ (int) (100 * backgroundShiftFactor) + "%, foregr ["
 				+ foregroundShiftColor + "]"
-				+ (int) (100 * foregroundShiftFactor) + "%", origScheme
-				.isDark());
+				+ (int) (100 * foregroundShiftFactor) + "%", getResolver(origScheme));
 		this.backgroundShiftColor = backgroundShiftColor;
 		this.backgroundShiftFactor = backgroundShiftFactor;
 		this.foregroundShiftColor = foregroundShiftColor;
