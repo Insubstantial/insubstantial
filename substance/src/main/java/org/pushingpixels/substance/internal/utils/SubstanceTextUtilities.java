@@ -32,6 +32,7 @@ package org.pushingpixels.substance.internal.utils;
 import java.awt.*;
 import java.awt.geom.AffineTransform;
 import java.awt.image.*;
+import java.lang.reflect.Method;
 
 import javax.swing.*;
 import javax.swing.border.Border;
@@ -58,6 +59,22 @@ import org.pushingpixels.substance.internal.utils.border.SubstanceTextComponentB
 public class SubstanceTextUtilities {
 	public static final String ENFORCE_FG_COLOR = "substancelaf.internal.textUtilities.enforceFgColor";
 
+	private static final Method drawStringUnderlineCharAt;
+	
+	static {
+	    Method method = null;
+	    
+        try {
+            Class<?> aaTextInfo = Class.forName("sun.swing.SwingUtilities2");
+            method = aaTextInfo.getDeclaredMethod("drawStringUnderlineCharAt", JComponent.class,
+                    Graphics.class, String.class, int.class, int.class, int.class);
+        } catch (RuntimeException e) {
+            throw new ExceptionInInitializerError(e);
+        } catch (Exception ignore) { }
+        
+        drawStringUnderlineCharAt = method;
+	}
+	
 	/**
 	 * Paints text with drop shadow.
 	 * 
@@ -158,8 +175,22 @@ public class SubstanceTextUtilities {
 			g2d.clip(clip);
 		if (transform != null)
 			g2d.transform(transform);
-		BasicGraphicsUtils.drawStringUnderlineCharAt(g2d, text, mnemonicIndex,
-				textRect.x, textRect.y + g2d.getFontMetrics().getAscent());
+		
+		if (drawStringUnderlineCharAt == null) {
+		    BasicGraphicsUtils.drawStringUnderlineCharAt(g2d, text, mnemonicIndex,
+		            textRect.x, textRect.y + g2d.getFontMetrics().getAscent());
+		} else {
+		    try {
+                drawStringUnderlineCharAt.invoke(null, comp, g, text, mnemonicIndex,
+                        textRect.x, textRect.y + g2d.getFontMetrics().getAscent());
+            } catch (RuntimeException e) {
+                throw e;
+            } catch (Exception ignore) {
+                BasicGraphicsUtils.drawStringUnderlineCharAt(g2d, text, mnemonicIndex,
+                        textRect.x, textRect.y + g2d.getFontMetrics().getAscent());
+            }
+		}
+		
 		g2d.dispose();
 	}
 
