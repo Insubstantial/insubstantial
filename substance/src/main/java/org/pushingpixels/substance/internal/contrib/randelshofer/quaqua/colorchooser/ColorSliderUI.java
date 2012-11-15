@@ -27,7 +27,6 @@ import java.awt.*;
 import java.awt.event.MouseEvent;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
-import java.util.Hashtable;
 
 /**
  * A UI delegate for color sliders. The track of the slider visualizes how
@@ -78,6 +77,7 @@ public class ColorSliderUI extends BasicSliderUI implements TransitionAwareUI {
 	private static final Dimension MINIMUM_VERTICAL_SIZE = new Dimension(26, 36);
 
 	/** Creates a new instance. */
+  @SuppressWarnings("UseOfObsoleteCollectionType")
 	public ColorSliderUI(JSlider b) {
 		super(b);
 		this.thumbModel = new DefaultButtonModel();
@@ -90,7 +90,7 @@ public class ColorSliderUI extends BasicSliderUI implements TransitionAwareUI {
 		this.stateTransitionTracker = new StateTransitionTracker(b,
 				this.thumbModel);
 
-        b.setLabelTable(new Hashtable());
+    b.setLabelTable(new java.util.Hashtable());
 	}
 
 	public static ComponentUI createUI(JComponent b) {
@@ -384,12 +384,19 @@ public class ColorSliderUI extends BasicSliderUI implements TransitionAwareUI {
         }
 
 
+        float[] rgbRatios;
+        if (slider.getOrientation() == JSlider.HORIZONTAL) {
+          rgbRatios = new float[] {0.0f, 1.0f};
+        } else {
+          rgbRatios = new float[] {1.0f, 0.0f};
+        }
         Graphics2D gg = (Graphics2D) g.create();
         gg.setPaint(new LinearGradientPaint(x, y, x2, y2,
                 new float[] {0f, 1.0f},
-                new Color[] { new Color(colorSliderModel.getInterpolatedRGB(componentIndex, 0.0f), true),
-                              new Color(colorSliderModel.getInterpolatedRGB(componentIndex, 1.0f))}));
+                new Color[] { new Color(colorSliderModel.getInterpolatedRGB(componentIndex, rgbRatios[0]), true),
+                              new Color(colorSliderModel.getInterpolatedRGB(componentIndex, rgbRatios[1]))}));
         gg.fillRect(x, y, width, height);
+        gg.dispose();
 	}
 
 	@Override
@@ -398,10 +405,12 @@ public class ColorSliderUI extends BasicSliderUI implements TransitionAwareUI {
 		// BorderLayout.CENTER (bug 4275631)
 		if (slider.getOrientation() == JSlider.HORIZONTAL) {
 			centerSpacing = thumbRect.height;
-			if (slider.getPaintTicks())
-				centerSpacing += getTickLength();
-			if (slider.getPaintLabels())
-				centerSpacing += getHeightOfTallestLabel();
+			if (slider.getPaintTicks()) {
+        centerSpacing += getTickLength();
+      }
+			if (slider.getPaintLabels()) {
+        centerSpacing += getHeightOfTallestLabel();
+      }
 			trackRect.x = contentRect.x + trackBuffer + 1;
 			// trackRect.y = contentRect.y + (contentRect.height - centerSpacing
 			// - 1)/2;
