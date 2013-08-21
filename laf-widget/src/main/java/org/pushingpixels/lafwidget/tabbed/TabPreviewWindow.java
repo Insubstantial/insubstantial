@@ -47,6 +47,7 @@ import org.pushingpixels.trident.Timeline;
  * @author Kirill Grouchnikov
  */
 public class TabPreviewWindow extends JWindow implements ActionListener {
+
 	public static final class PreviewLabel extends JLabel {
 		float alpha = 0.0f;
 
@@ -227,10 +228,12 @@ public class TabPreviewWindow extends JWindow implements ActionListener {
 			throw new IllegalArgumentException(
 					"Extra delay for tab preview must be non-negative");
 		}
-        // original 2000ms delay
-//		currTabPreviewTimer = new Timer(2000 + extraDelay, this);
-        // changed original delay to zero to show preview immediately
-		currTabPreviewTimer = new Timer(0 + extraDelay, this);
+        int delay = previewPainter.getPreviewWindowDelay(tabPane, tabIndex);
+        if (delay < 0) {
+            throw new IllegalArgumentException(
+                    "Delay for tab preview must be non-negative");
+        }
+        currTabPreviewTimer = new Timer(delay + extraDelay, this);
 		currTabPreviewTimer.setRepeats(false);
 		currTabPreviewTimer.start();
 	}

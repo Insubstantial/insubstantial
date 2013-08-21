@@ -176,10 +176,15 @@ public abstract class TabPreviewPainter {
 	 *            Tab index.
 	 * @return Non-negative extra delay (in milliseconds) for showing the tab
 	 *         preview window.
+     * @deprecated use #getPreviewWindowDelay instead
 	 */
 	public int getPreviewWindowExtraDelay(JTabbedPane tabPane, int tabIndex) {
 		return 0;
 	}
+
+    public int getPreviewWindowDelay(JTabbedPane tabPane, int tabIndex) {
+        return 2000;
+    }
 
 	/**
 	 * Returns indication whether the thumbnail preview should be updated
