@@ -227,7 +227,10 @@ public class TabPreviewWindow extends JWindow implements ActionListener {
 			throw new IllegalArgumentException(
 					"Extra delay for tab preview must be non-negative");
 		}
-		currTabPreviewTimer = new Timer(2000 + extraDelay, this);
+        // original 2000ms delay
+//		currTabPreviewTimer = new Timer(2000 + extraDelay, this);
+        // changed original delay to zero to show preview immediately
+		currTabPreviewTimer = new Timer(0 + extraDelay, this);
 		currTabPreviewTimer.setRepeats(false);
 		currTabPreviewTimer.start();
 	}
