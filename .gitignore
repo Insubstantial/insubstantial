@@ -9,3 +9,5 @@ www/webstart/*.jar
 .classpath
 .project
 .settings
+.nb-gradle
+*.zip

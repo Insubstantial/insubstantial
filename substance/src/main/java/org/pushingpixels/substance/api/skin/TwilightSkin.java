@@ -38,6 +38,7 @@ import org.pushingpixels.substance.api.painter.fill.StandardFillPainter;
 import org.pushingpixels.substance.api.painter.highlight.ClassicHighlightPainter;
 import org.pushingpixels.substance.api.painter.overlay.*;
 import org.pushingpixels.substance.api.shaper.ClassicButtonShaper;
+import org.pushingpixels.substance.api.watermark.SubstanceWatermark;
 
 /**
  * <code>Twilight</code> skin. This class is part of officially supported API.
@@ -66,7 +67,10 @@ public class TwilightSkin extends SubstanceSkin {
 	 * Overlay painter to paint a bezel line along the top edge of the footer.
 	 */
 	private TopBezelOverlayPainter footerTopBezelOverlayPainter;
-
+    public TwilightSkin(SubstanceWatermark watermark) {
+        this();
+        this.watermark = watermark;
+    }
 	/**
 	 * Creates a new <code>Twilight</code> skin.
 	 */

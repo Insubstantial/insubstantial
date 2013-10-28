@@ -36,7 +36,7 @@ import org.pushingpixels.substance.api.painter.decoration.FlatDecorationPainter;
 import org.pushingpixels.substance.api.painter.fill.FractionBasedFillPainter;
 import org.pushingpixels.substance.api.painter.highlight.ClassicHighlightPainter;
 import org.pushingpixels.substance.api.shaper.ClassicButtonShaper;
-
+import org.pushingpixels.substance.api.watermark.SubstanceWatermark;
 /**
  * <code>Graphite</code> skin. This class is part of officially supported API.
  * 
@@ -48,7 +48,10 @@ public class GraphiteSkin extends SubstanceSkin {
 	 * Display name for <code>this</code> skin.
 	 */
 	public static final String NAME = "Graphite";
-
+    public GraphiteSkin(SubstanceWatermark watermark) {
+        this();
+        this.watermark = watermark;
+    }
 	/**
 	 * Creates a new <code>Graphite</code> skin.
 	 */

@@ -39,7 +39,7 @@ import org.pushingpixels.substance.api.painter.decoration.BrushedMetalDecoration
 import org.pushingpixels.substance.api.painter.fill.ClassicFillPainter;
 import org.pushingpixels.substance.api.painter.highlight.ClassicHighlightPainter;
 import org.pushingpixels.substance.api.shaper.ClassicButtonShaper;
-
+import org.pushingpixels.substance.api.watermark.SubstanceWatermark;
 /**
  * <code>Business Blue Steel</code> skin. This class is part of officially
  * supported API.
@@ -52,7 +52,10 @@ public class BusinessBlueSteelSkin extends SubstanceSkin {
 	 * Display name for <code>this</code> skin.
 	 */
 	public static final String NAME = "Business Blue Steel";
-
+    public BusinessBlueSteelSkin(SubstanceWatermark watermark) {
+        this();
+        this.watermark = watermark;
+    }
 	/**
 	 * Creates a new <code>Business</code> skin.
 	 */

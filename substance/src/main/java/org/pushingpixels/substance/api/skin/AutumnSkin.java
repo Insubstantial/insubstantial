@@ -37,7 +37,7 @@ import org.pushingpixels.substance.api.painter.highlight.ClassicHighlightPainter
 import org.pushingpixels.substance.api.painter.overlay.BottomLineOverlayPainter;
 import org.pushingpixels.substance.api.painter.overlay.TopShadowOverlayPainter;
 import org.pushingpixels.substance.api.shaper.ClassicButtonShaper;
-
+import org.pushingpixels.substance.api.watermark.SubstanceWatermark;
 /**
  * <code>Autumn</code> skin. This class is part of officially supported API.
  * 
@@ -54,7 +54,10 @@ public class AutumnSkin extends SubstanceSkin {
 	 * Overlay painter to paint separator lines on some decoration areas.
 	 */
 	private BottomLineOverlayPainter bottomLineOverlayPainter;
-
+    public AutumnSkin(SubstanceWatermark watermark) {
+        this();
+        this.watermark = watermark;
+    }
 	/**
 	 * Creates a new <code>Autumn</code> skin.
 	 */

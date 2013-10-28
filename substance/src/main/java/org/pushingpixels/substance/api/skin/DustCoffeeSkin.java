@@ -36,7 +36,7 @@ import org.pushingpixels.substance.api.SubstanceColorScheme;
 import org.pushingpixels.substance.api.SubstanceColorSchemeBundle;
 import org.pushingpixels.substance.api.SubstanceSkin;
 import org.pushingpixels.substance.api.painter.fill.MatteFillPainter;
-
+import org.pushingpixels.substance.api.watermark.SubstanceWatermark;
 /**
  * <code>Dust Coffee</code> skin. This class is part of officially supported
  * API.
@@ -49,7 +49,10 @@ public class DustCoffeeSkin extends DustSkin {
 	 * Display name for <code>this</code> skin.
 	 */
 	public static final String NAME = "Dust Coffee";
-
+    public DustCoffeeSkin(SubstanceWatermark watermark) {
+        this();
+        this.watermark = watermark;
+    }
 	/**
 	 * Creates a new <code>Dust Coffee</code> skin.
 	 */

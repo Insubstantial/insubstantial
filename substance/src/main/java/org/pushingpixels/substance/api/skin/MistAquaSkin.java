@@ -39,7 +39,7 @@ import org.pushingpixels.substance.api.painter.decoration.MatteDecorationPainter
 import org.pushingpixels.substance.api.painter.fill.MatteFillPainter;
 import org.pushingpixels.substance.api.painter.highlight.ClassicHighlightPainter;
 import org.pushingpixels.substance.api.shaper.StandardButtonShaper;
-
+import org.pushingpixels.substance.api.watermark.SubstanceWatermark;
 /**
  * <code>Mist Aqua</code> skin. This class is experimental.
  * 
@@ -51,7 +51,10 @@ public class MistAquaSkin extends SubstanceSkin {
 	 * Display name for <code>this</code> skin.
 	 */
 	public static final String NAME = "Mist Aqua";
-
+    public MistAquaSkin(SubstanceWatermark watermark) {
+        this();
+        this.watermark = watermark;
+    }
 	/**
 	 * Creates a new <code>Silver Aqua</code> skin.
 	 */

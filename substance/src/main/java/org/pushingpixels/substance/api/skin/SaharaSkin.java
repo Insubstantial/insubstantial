@@ -39,7 +39,7 @@ import org.pushingpixels.substance.api.painter.decoration.ClassicDecorationPaint
 import org.pushingpixels.substance.api.painter.fill.ClassicFillPainter;
 import org.pushingpixels.substance.api.painter.highlight.ClassicHighlightPainter;
 import org.pushingpixels.substance.api.shaper.ClassicButtonShaper;
-
+import org.pushingpixels.substance.api.watermark.SubstanceWatermark;
 /**
  * <code>Sahara</code> skin. This class is part of officially supported API.
  * 
@@ -50,7 +50,10 @@ public class SaharaSkin extends SubstanceSkin {
 	 * Display name for <code>this</code> skin.
 	 */
 	public static final String NAME = "Sahara";
-
+    public SaharaSkin(SubstanceWatermark watermark) {
+        this();
+        this.watermark = watermark;
+    }
 	/**
 	 * Creates a new <code>Sahara</code> skin.
 	 */

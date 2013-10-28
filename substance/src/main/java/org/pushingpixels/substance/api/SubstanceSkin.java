@@ -31,8 +31,12 @@ package org.pushingpixels.substance.api;
 
 import java.awt.Component;
 import java.awt.Graphics2D;
+import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
 import java.net.URL;
 import java.util.*;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import javax.swing.JTabbedPane;
 import javax.swing.UIDefaults;
@@ -214,7 +218,21 @@ public abstract class SubstanceSkin implements SubstanceTrait {
 	public final SubstanceWatermark getWatermark() {
 		return this.watermark;
 	}
-
+        
+        public SubstanceSkin changeWatermark(SubstanceWatermark watermark) {
+            SubstanceSkin newSkin = null;
+            try {
+                Class c = getClass();
+                Constructor m = c.getConstructor(new Class[]{SubstanceWatermark.class});
+                if (m != null) {
+                    newSkin = (SubstanceSkin) m.newInstance(new Object[]{watermark});
+                }
+            } catch (Exception ex) {
+                Logger.getLogger(SubstanceSkin.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            return newSkin;
+        }
+                
 	/**
 	 * Returns the border painter of this skin.
 	 * 
