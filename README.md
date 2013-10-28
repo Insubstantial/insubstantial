@@ -15,10 +15,10 @@ SubstanceLookAndFeel.changeWatermark(getSubstanceImageWatermark());
 </code>
 </p>
 
-Download the archive:
+Download the archive insubstantial-libraries-7.3-SNAPSHOT.zip:
 <ul>
-<li><a href="https://www.dropbox.com/sh/3msv90xpsrvbpkz/3fIbgoJWVZ">Dropbox</a></li>
-<li><a href="http://pan.baidu.com/s/1oovny">Baidu云网盘</a></li>
+<li><a href="https://www.dropbox.com/sh/3msv90xpsrvbpkz/3fIbgoJWVZ" target="_blank">Dropbox</a></li>
+<li><a href="http://pan.baidu.com/s/1oovny" target="_blank">Baidu云网盘</a></li>
 </ul>
 
 
