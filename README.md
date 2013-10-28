@@ -15,3 +15,10 @@ SubstanceLookAndFeel.changeWatermark(getSubstanceImageWatermark());
 </code>
 </p>
 
+Download the archive:
+<ul>
+<li><a href="https://www.dropbox.com/sh/3msv90xpsrvbpkz/3fIbgoJWVZ">Dropbox</a></li>
+<li><a href="http://pan.baidu.com/s/1oovny">Baidu云网盘</a></li>
+</ul>
+
+
