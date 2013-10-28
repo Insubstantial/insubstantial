@@ -11,3 +11,4 @@ www/webstart/*.jar
 .settings
 .nb-gradle
 *.zip
+gradle
