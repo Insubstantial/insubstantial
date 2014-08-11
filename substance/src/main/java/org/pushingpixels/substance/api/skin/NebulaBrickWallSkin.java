@@ -32,7 +32,7 @@ package org.pushingpixels.substance.api.skin;
 import org.pushingpixels.substance.api.DecorationAreaType;
 import org.pushingpixels.substance.api.SubstanceLookAndFeel;
 import org.pushingpixels.substance.api.colorscheme.OrangeColorScheme;
-
+import org.pushingpixels.substance.api.watermark.SubstanceWatermark;
 import javax.swing.UIManager;
 
 /**
@@ -47,7 +47,10 @@ public class NebulaBrickWallSkin extends NebulaSkin {
 	 * Display name for <code>this</code> skin.
 	 */
 	public static final String NAME = "Nebula Brick Wall";
-
+    public NebulaBrickWallSkin(SubstanceWatermark watermark) {
+        this();
+        this.watermark = watermark;
+    }
 	/**
 	 * Creates a new <code>Nebula Brick Wall</code> skin.
 	 */

@@ -41,6 +41,7 @@ import org.pushingpixels.substance.api.painter.fill.FractionBasedFillPainter;
 import org.pushingpixels.substance.api.painter.highlight.ClassicHighlightPainter;
 import org.pushingpixels.substance.api.painter.overlay.BottomLineOverlayPainter;
 import org.pushingpixels.substance.api.shaper.ClassicButtonShaper;
+import org.pushingpixels.substance.api.watermark.SubstanceWatermark;
 
 /**
  * <code>Office Blue 2007</code> skin. This class is part of officially
@@ -246,6 +247,11 @@ public class OfficeBlue2007Skin extends SubstanceSkin {
 
 		this.highlightPainter = new ClassicHighlightPainter();
 	}
+
+    public OfficeBlue2007Skin(SubstanceWatermark watermark) {
+        this();
+        this.watermark = watermark;
+    }
 
 	/*
 	 * (non-Javadoc)

@@ -17,10 +17,12 @@ subprojects {
   group = 'com.github.insubstantial'
   version = '7.3.1-SNAPSHOT'
   ext.versionKey = "7.3-destroyer"
-
+  
   sourceCompatibility = 1.6
   targetCompatibility = 1.6
+  
 
+    
   configurations {
     maven { extendsFrom archives }
     published { extendsFrom archives, signatures}
@@ -106,6 +108,11 @@ subprojects {
       }
     }
   }
+  [compileJava, javadoc, compileTestJava]*.options*.encoding = 'UTF-8'
+  compileJava.options.encoding = 'UTF-8'
+  tasks.withType(Compile) {  
+        options.encoding = "UTF-8"  
+  }  
 }
 
 task githubDist(type: Zip) {

@@ -39,7 +39,7 @@ import org.pushingpixels.substance.api.painter.highlight.GlassHighlightPainter;
 import org.pushingpixels.substance.api.painter.overlay.BottomLineOverlayPainter;
 import org.pushingpixels.substance.api.shaper.ClassicButtonShaper;
 import org.pushingpixels.substance.internal.colorscheme.BlendBiColorScheme;
-
+import org.pushingpixels.substance.api.watermark.SubstanceWatermark;
 import java.awt.Color;
 
 /**
@@ -56,7 +56,10 @@ public class CeruleanSkin extends SubstanceSkin {
      * Overlay painter to paint separator lines on some decoration areas.
      */
     private BottomLineOverlayPainter bottomLineOverlayPainter;
-
+    public CeruleanSkin(SubstanceWatermark watermark) {
+        this();
+        this.watermark = watermark;
+    }
     /**
      * Creates a new <code>Nebulous</code> skin.
      */

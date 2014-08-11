@@ -38,7 +38,7 @@ import org.pushingpixels.substance.api.painter.decoration.ClassicDecorationPaint
 import org.pushingpixels.substance.api.painter.fill.GlassFillPainter;
 import org.pushingpixels.substance.api.painter.highlight.ClassicHighlightPainter;
 import org.pushingpixels.substance.api.shaper.ClassicButtonShaper;
-
+import org.pushingpixels.substance.api.watermark.SubstanceWatermark;
 /**
  * <code>Moderate</code> skin. This class is part of officially supported API.
  * 
@@ -50,7 +50,10 @@ public class ModerateSkin extends SubstanceSkin {
 	 * Display name for <code>this</code> skin.
 	 */
 	public static final String NAME = "Moderate";
-
+    public ModerateSkin(SubstanceWatermark watermark) {
+        this();
+        this.watermark = watermark;
+    }
 	/**
 	 * Creates a new <code>Moderate</code> skin.
 	 */

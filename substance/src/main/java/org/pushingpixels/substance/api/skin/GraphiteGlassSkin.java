@@ -40,7 +40,7 @@ import org.pushingpixels.substance.api.painter.highlight.GlassHighlightPainter;
 import org.pushingpixels.substance.api.painter.overlay.BottomLineOverlayPainter;
 import org.pushingpixels.substance.api.painter.overlay.TopLineOverlayPainter;
 import org.pushingpixels.substance.api.shaper.ClassicButtonShaper;
-
+import org.pushingpixels.substance.api.watermark.SubstanceWatermark;
 /**
  * <code>Graphite Glass</code> skin. This class is part of officially supported
  * API.
@@ -64,7 +64,10 @@ public class GraphiteGlassSkin extends SubstanceSkin {
 	 * Overlay painter to paint a light line along the top edge of the toolbars.
 	 */
 	private TopLineOverlayPainter toolbarOverlayPainter;
-
+    public GraphiteGlassSkin(SubstanceWatermark watermark) {
+        this();
+        this.watermark = watermark;
+    }
 	/**
 	 * Creates a new <code>Graphite</code> skin.
 	 */

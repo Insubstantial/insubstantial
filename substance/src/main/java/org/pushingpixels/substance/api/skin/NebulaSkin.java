@@ -40,7 +40,7 @@ import org.pushingpixels.substance.api.painter.highlight.ClassicHighlightPainter
 import org.pushingpixels.substance.api.painter.overlay.BottomLineOverlayPainter;
 import org.pushingpixels.substance.api.painter.overlay.TopShadowOverlayPainter;
 import org.pushingpixels.substance.api.shaper.ClassicButtonShaper;
-
+import org.pushingpixels.substance.api.watermark.SubstanceWatermark;
 /**
  * <code>Nebula</code> skin. This class is part of officially supported API.
  * 
@@ -57,7 +57,10 @@ public class NebulaSkin extends SubstanceSkin {
 	 * Overlay painter to paint separator lines on some decoration areas.
 	 */
 	private BottomLineOverlayPainter bottomLineOverlayPainter;
-
+    public NebulaSkin(SubstanceWatermark watermark) {
+        this();
+        this.watermark = watermark;
+    }
 	/**
 	 * Creates a new <code>Nebula</code> skin.
 	 */

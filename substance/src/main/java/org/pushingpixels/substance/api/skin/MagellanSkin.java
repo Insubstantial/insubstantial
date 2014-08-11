@@ -45,7 +45,7 @@ import org.pushingpixels.substance.api.painter.overlay.BottomShadowOverlayPainte
 import org.pushingpixels.substance.api.painter.overlay.TopBezelOverlayPainter;
 import org.pushingpixels.substance.api.painter.overlay.TopLineOverlayPainter;
 import org.pushingpixels.substance.api.shaper.ClassicButtonShaper;
-
+import org.pushingpixels.substance.api.watermark.SubstanceWatermark;
 /**
  * <code>Magellan</code> skin. This class is part of officially supported API.
  * 
@@ -78,7 +78,10 @@ public class MagellanSkin extends SubstanceSkin {
 	public String getDisplayName() {
 		return NAME;
 	}
-
+    public MagellanSkin(SubstanceWatermark watermark) {
+        this();
+        this.watermark = watermark;
+    }
 	/**
 	 * Creates a new instance of Magellan skin.
 	 */

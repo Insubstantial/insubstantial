@@ -43,7 +43,7 @@ import org.pushingpixels.substance.api.shaper.ClassicButtonShaper;
 import org.pushingpixels.substance.api.watermark.SubstanceCrosshatchWatermark;
 import org.pushingpixels.substance.api.watermark.SubstanceWatermark;
 import org.pushingpixels.substance.internal.utils.SubstanceCoreUtilities;
-
+import org.pushingpixels.substance.api.watermark.SubstanceWatermark;
 /**
  * <code>Mariner</code> skin. This class is part of officially supported API.
  * 
@@ -77,7 +77,10 @@ public class MarinerSkin extends SubstanceSkin {
 	 * Overlay painter to paint a bezel line along the top edge of the footer.
 	 */
 	private TopBezelOverlayPainter footerTopBezelOverlayPainter;
-
+    public MarinerSkin(SubstanceWatermark watermark) {
+        this();
+        this.watermark = watermark;
+    }
 	/**
 	 * Creates a new <code>Mariner</code> skin.
 	 */

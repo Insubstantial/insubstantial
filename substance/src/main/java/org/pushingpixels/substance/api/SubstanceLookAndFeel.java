@@ -57,6 +57,7 @@ import org.pushingpixels.substance.api.skin.SkinChangeListener;
 import org.pushingpixels.substance.api.skin.SkinInfo;
 import org.pushingpixels.substance.api.tabbed.BaseTabCloseListener;
 import org.pushingpixels.substance.api.tabbed.TabCloseCallback;
+import org.pushingpixels.substance.api.watermark.SubstanceWatermark;
 import org.pushingpixels.substance.internal.contrib.jgoodies.looks.common.ShadowPopupFactory;
 import org.pushingpixels.substance.internal.fonts.FontPolicies;
 import org.pushingpixels.substance.internal.painter.DecorationPainterUtils;
@@ -2107,7 +2108,16 @@ public abstract class SubstanceLookAndFeel extends BasicLookAndFeel {
 	 * The current Substance skin.
 	 */
 	private static SubstanceSkin currentSkin = null;
-
+        
+        public static void changeWatermark(SubstanceWatermark watermark) {
+            SubstanceSkin skin = currentSkin;
+            if(skin != null) {
+                SubstanceSkin newSkin = skin.changeWatermark(watermark);
+                if (newSkin != null) {
+                    setSkin(newSkin);
+                }
+            }
+        }
 	/**
 	 * Sets the specified skin. If the current look-and-feel is not Substance,
 	 * this method will create a new Substance look-and-feel based on the
