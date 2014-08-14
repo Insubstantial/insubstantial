@@ -80,49 +80,6 @@ public class SubstanceComboPopup extends BasicComboPopup {
 		setBorder(new SubstanceBorder(new Insets(0, 2, 2, 2)));
 	}
 
-	/**
-	 * Sets the list selection index to the selectedIndex. This method is used
-	 * to synchronize the list selection with the combo box selection.
-	 * 
-	 * @param selectedIndex
-	 *            the index to set the list
-	 */
-	private void setListSelection(int selectedIndex) {
-		if (selectedIndex == -1) {
-			this.list.clearSelection();
-		} else {
-			this.list.setSelectedIndex(selectedIndex);
-			this.list.ensureIndexIsVisible(selectedIndex);
-		}
-	}
-
-	/**
-	 * Calculates the upper left location of the popup.
-	 * 
-	 * @return The upper left location of the popup.
-	 */
-	private Point getPopupLocation() {
-		Dimension popupSize = this.comboBox.getSize();
-		Insets insets = this.getInsets();
-
-		// reduce the width of the scrollpane by the insets so that the popup
-		// is the same width as the combo box.
-		popupSize.setSize(popupSize.width - (insets.right + insets.left), this
-				.getPopupHeightForRowCount(this.comboBox.getMaximumRowCount()));
-		Rectangle popupBounds = this.computePopupBounds(0, this.comboBox
-				.getBounds().height, popupSize.width, popupSize.height);
-		Dimension scrollSize = popupBounds.getSize();
-		Point popupLocation = popupBounds.getLocation();
-
-		this.scroller.setMaximumSize(scrollSize);
-		this.scroller.setPreferredSize(scrollSize);
-		this.scroller.setMinimumSize(scrollSize);
-
-		this.list.revalidate();
-
-		return new Point(popupLocation.x, popupLocation.y);
-	}
-
 	/*
 	 * (non-Javadoc)
 	 * 
