@@ -1,6 +1,8 @@
 package utest.ribbon;
 
 import java.awt.Color;
+import java.util.Arrays;
+import java.util.List;
 
 import javax.swing.JFrame;
 
@@ -11,7 +13,13 @@ import org.fest.swing.junit.testcase.FestSwingJUnitTestCase;
 import org.junit.Test;
 import org.pushingpixels.flamingo.api.common.JCommandButton;
 import org.pushingpixels.flamingo.api.common.icon.EmptyResizableIcon;
-import org.pushingpixels.flamingo.api.ribbon.*;
+import org.pushingpixels.flamingo.api.ribbon.JRibbon;
+import org.pushingpixels.flamingo.api.ribbon.JRibbonBand;
+import org.pushingpixels.flamingo.api.ribbon.JRibbonFrame;
+import org.pushingpixels.flamingo.api.ribbon.RibbonContextualTaskGroup;
+import org.pushingpixels.flamingo.api.ribbon.RibbonElementPriority;
+import org.pushingpixels.flamingo.api.ribbon.RibbonTask;
+import org.pushingpixels.flamingo.api.ribbon.resize.IconRibbonBandResizePolicy;
 
 public class RibbonBandTestCase extends FestSwingJUnitTestCase {
 	private JRibbonFrame frame;
@@ -43,6 +51,9 @@ public class RibbonBandTestCase extends FestSwingJUnitTestCase {
 							+ (i + 1), new EmptyResizableIcon(32)),
 							RibbonElementPriority.TOP);
 				}
+				result.setResizePolicies((List) Arrays
+						.asList(new IconRibbonBandResizePolicy(result
+								.getControlPanel())));
 				return result;
 			}
 

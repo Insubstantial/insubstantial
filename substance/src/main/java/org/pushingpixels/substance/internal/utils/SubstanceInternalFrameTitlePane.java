@@ -321,15 +321,16 @@ public class SubstanceInternalFrameTitlePane extends
 		if (leftToRight) {
 			xOffset = 5;
 			Icon icon = this.frame.getFrameIcon();
+			int iconWidth = 0;
+			int menuWidth = 0;
 			if (icon != null) {
-				xOffset += icon.getIconWidth() + 5;
+				iconWidth = icon.getIconWidth() + 5;
 			}
 
-			leftEnd = (this.menuBar == null) ? 0
+			menuWidth = (this.menuBar == null) ? 0
 					: (this.menuBar.getWidth() + 5);
+			leftEnd = Math.max(iconWidth, menuWidth);
 			xOffset += leftEnd;
-			if (icon != null)
-				leftEnd += (icon.getIconWidth() + 5);
 
 			rightEnd = width - 5;
 
@@ -364,15 +365,17 @@ public class SubstanceInternalFrameTitlePane extends
 				theTitle = clippedTitle;
 			}
 		} else {
-			xOffset = width - 5;
+			int iconWidth = 0;
+			int menuWidth = 0;
 
 			Icon icon = this.frame.getFrameIcon();
 			if (icon != null) {
-				xOffset -= (icon.getIconWidth() + 5);
+				iconWidth = (icon.getIconWidth() + 5);
 			}
 
-			rightEnd = (this.menuBar == null) ? xOffset : xOffset
-					- this.menuBar.getWidth() - 5;
+			menuWidth = (this.menuBar == null) ? 0 : this.menuBar.getWidth() + 5;
+			rightEnd = width - Math.max(iconWidth, menuWidth);
+			xOffset = rightEnd - 5;
 
 			// find the rightmost button for the left end
 			AbstractButton rightmostButton = null;

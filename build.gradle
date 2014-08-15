@@ -1,8 +1,13 @@
-apply plugin: 'idea'
-apply plugin: 'eclipse'
-
 group = 'com.github.insubstantial'
-version = '7.2.1-SNAPSHOT'
+version = '7.3.1-SNAPSHOT'
+
+if (JavaVersion.current().isJava8Compatible()) {
+  allprojects {
+    tasks.withType(Javadoc) {
+      options.addStringOption('Xdoclint:none', '-quiet')
+    }
+  }
+}
 
 subprojects {
   apply plugin: 'java'
@@ -10,8 +15,8 @@ subprojects {
   apply plugin: 'signing'
 
   group = 'com.github.insubstantial'
-  version = '7.2.1-SNAPSHOT'
-  ext.versionKey = "7.2.1-magnificent"
+  version = '7.3.1-SNAPSHOT'
+  ext.versionKey = "7.3-destroyer"
 
   sourceCompatibility = 1.6
   targetCompatibility = 1.6
@@ -28,9 +33,9 @@ subprojects {
   }
 
   repositories {
-    mavenRepo url: 'https://oss.sonatype.org/content/groups/staging'
+    maven { url 'https://oss.sonatype.org/content/groups/staging' }
     mavenCentral()
-    mavenRepo url: new File(System.getProperty('user.home'), '.m2/repository').toURI().toString()
+    maven { url new File(System.getProperty('user.home'), '.m2/repository').toURI().toString() }
   }
 
   task sourceJar(type: Jar) {

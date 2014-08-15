@@ -1,6 +1,3 @@
-apply plugin: 'idea'
-apply plugin: 'eclipse'
-
 dependencies {
   compile project(":trident")
   compile group: 'asm', name: 'asm-all', version: '2.2.3'

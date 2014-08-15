@@ -1,6 +1,3 @@
-apply plugin: 'idea'
-apply plugin: 'eclipse'
-
 ext.swingXVersion = "1.6.3"
 
 configurations {

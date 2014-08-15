@@ -124,7 +124,7 @@ public class JRibbonApplicationMenuButton extends JCommandButton {
 	 *            the ribbon component
 	 */
 	public JRibbonApplicationMenuButton(JRibbon ribbon) {
-		super("", ribbon.getApplicationIcon() != null ? ribbon
+		super("", (ribbon != null && ribbon.getApplicationIcon() != null) ? ribbon
 				.getApplicationIcon() : new EmptyResizableIcon(16));
 		this.setCommandButtonKind(CommandButtonKind.POPUP_ONLY);
 		this.setDisplayState(APP_MENU_BUTTON_STATE);

@@ -1,29 +1,33 @@
- /**
- * Copyright (c) 2010 Intelligent Software Solutions
- * Unpublished-all rights reserved under the copyright laws of the United States.
+/*
+ * Copyright (c) 2005-2012 Substance Kirill Grouchnikov and contributing authors. All Rights Reserved.
  *
- * This software was developed under sponsorship from the
- * Air Force Research Laboratory under FA8750-06-D-005 and FA8750-09-R-0022.
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions are met:
  *
- * Contractor: Intelligent Software Solutions
- *             5450 Tech Center Drive, Suite 400
- *             Colorado Springs, 80919
- *             http://www.issinc.com
+ *  o Redistributions of source code must retain the above copyright notice,
+ *    this list of conditions and the following disclaimer.
  *
- * Intelligent Software Solutions has title to the rights in this computer
- * software. The Government's rights to use, modify, reproduce, release, perform,
- * display, or disclose these technical data are restricted by paragraph (b)(1) of
- * the Rights in Technical Data-Noncommercial Items clause contained in
- * Contract No. FA8750-06-D-005 and No. FA8750-09-R-0022.
- * Any reproduction of technical data or portions thereof marked with this legend
- * must also reproduce the markings.
+ *  o Redistributions in binary form must reproduce the above copyright notice,
+ *    this list of conditions and the following disclaimer in the documentation
+ *    and/or other materials provided with the distribution.
  *
- * Intelligent Software Solutions does not grant permission inconsistent with the
- * aforementioned unlimited government rights to use, disclose, copy, or make
- * derivative works of this software to parties outside the Government.
+ *  o Neither the name of Substance Kirill Grouchnikov nor the names of
+ *    its contributors may be used to endorse or promote products derived
+ *    from this software without specific prior written permission.
+ *
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+ * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO,
+ * THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
+ * PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR
+ * CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
+ * EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
+ * PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS;
+ * OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY,
+ * WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE
+ * OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE,
+ * EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-
- package org.pushingpixels.substance.api.skin;
+package org.pushingpixels.substance.api.skin;
 
 import org.pushingpixels.substance.api.*;
 import org.pushingpixels.substance.api.colorscheme.BaseColorScheme;

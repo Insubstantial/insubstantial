@@ -520,7 +520,7 @@ public class SubstanceTreeUI extends BasicTreeUI {
 				if ("dropLocation".equals(evt.getPropertyName())) {
 					JTree.DropLocation oldValue = (JTree.DropLocation) evt
 							.getOldValue();
-					if (oldValue != null) {
+					if (oldValue != null && oldValue.getPath() != null) {
 						TreePath oldDrop = oldValue.getPath();
 						Rectangle oldBounds = getPathBounds(tree, oldDrop);
 						tree.repaint(0, oldBounds.y, tree.getWidth(),

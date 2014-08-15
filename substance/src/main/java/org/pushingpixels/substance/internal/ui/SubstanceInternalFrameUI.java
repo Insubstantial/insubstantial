@@ -98,7 +98,7 @@ public class SubstanceInternalFrameUI extends BasicInternalFrameUI {
 
     @Override
     protected void installComponents() {
-        if (!SubstanceCoreUtilities.isRoundedCorners(frame)) {
+        if (SubstanceCoreUtilities.isRoundedCorners(frame)) {
             frame.setOpaque(false);
         }
         super.installComponents();
@@ -117,7 +117,7 @@ public class SubstanceInternalFrameUI extends BasicInternalFrameUI {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see javax.swing.plaf.basic.BasicInternalFrameUI#installListeners()
 	 */
 	@Override
@@ -149,9 +149,9 @@ public class SubstanceInternalFrameUI extends BasicInternalFrameUI {
 				} else if (JInternalFrame.IS_SELECTED_PROPERTY.equals(propertyName)) {
                     titlePane.setActive((Boolean)evt.getNewValue());
                 } else if (SubstanceLookAndFeel.WINDOW_ROUNDED_CORNERS.equals(propertyName)
-                        || JInternalFrame.IS_MAXIMUM_PROPERTY.equals(propertyName)) 
+                        || JInternalFrame.IS_MAXIMUM_PROPERTY.equals(propertyName))
                 {
-                    if (!SubstanceCoreUtilities.isRoundedCorners(frame)) {
+                    if (SubstanceCoreUtilities.isRoundedCorners(frame)) {
                         frame.setOpaque(false);
                     }
                 }

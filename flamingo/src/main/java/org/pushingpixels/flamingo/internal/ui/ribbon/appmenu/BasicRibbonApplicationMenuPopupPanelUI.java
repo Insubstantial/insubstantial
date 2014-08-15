@@ -306,7 +306,7 @@ public class BasicRibbonApplicationMenuPopupPanelUI extends BasicPopupPanelUI {
 
         // check to see if we hide second level menus 
         Object o = null;
-        if (this.applicationMenuPopupPanel.getAppMenuButton() != null) {
+        if (this.applicationMenuPopupPanel.getAppMenuButton() != null && this.applicationMenuPopupPanel.getAppMenuButton().getRibbon() != null) {
             o = this.applicationMenuPopupPanel.getAppMenuButton().getRibbon().getClientProperty("ribbon.hideSecondary");
         }
         if (o instanceof Boolean && (Boolean)o) {
