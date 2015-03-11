@@ -141,10 +141,15 @@ public class SubstanceRibbonBandUI extends BasicRibbonBandUI {
 
 		int currLength = (int) fm.getStringBounds(title, g2d).getWidth();
 		String titleToPaint = title;
-		while (currLength > titleRectangle.width) {
+		
+		while ((currLength > titleRectangle.width) && (title.length() > 0)) {
 			title = title.substring(0, title.length() - 1);
 			titleToPaint = title + "...";
 			currLength = (int) fm.getStringBounds(titleToPaint, g2d).getWidth();
+		}
+		
+		if (currLength > titleRectangle.width) {
+			titleToPaint = "";
 		}
 
 		SubstanceSkin skin = SubstanceCoreUtilities.getSkin(this.ribbonBand);
