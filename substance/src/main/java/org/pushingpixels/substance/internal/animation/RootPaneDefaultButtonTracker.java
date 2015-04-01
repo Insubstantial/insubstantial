@@ -1,31 +1,31 @@
 /*
  * Copyright (c) 2005-2010 Substance Kirill Grouchnikov. All Rights Reserved.
  *
- * Redistribution and use in source and binary forms, with or without 
+ * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
- * 
- *  o Redistributions of source code must retain the above copyright notice, 
- *    this list of conditions and the following disclaimer. 
- *     
- *  o Redistributions in binary form must reproduce the above copyright notice, 
- *    this list of conditions and the following disclaimer in the documentation 
- *    and/or other materials provided with the distribution. 
- *     
- *  o Neither the name of Substance Kirill Grouchnikov nor the names of 
- *    its contributors may be used to endorse or promote products derived 
- *    from this software without specific prior written permission. 
- *     
- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" 
- * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, 
- * THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR 
- * PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR 
- * CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, 
- * EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, 
- * PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; 
- * OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, 
- * WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE 
- * OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, 
- * EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. 
+ *
+ *  o Redistributions of source code must retain the above copyright notice,
+ *    this list of conditions and the following disclaimer.
+ *
+ *  o Redistributions in binary form must reproduce the above copyright notice,
+ *    this list of conditions and the following disclaimer in the documentation
+ *    and/or other materials provided with the distribution.
+ *
+ *  o Neither the name of Substance Kirill Grouchnikov nor the names of
+ *    its contributors may be used to endorse or promote products derived
+ *    from this software without specific prior written permission.
+ *
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+ * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO,
+ * THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
+ * PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR
+ * CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
+ * EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
+ * PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS;
+ * OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY,
+ * WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE
+ * OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE,
+ * EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 package org.pushingpixels.substance.internal.animation;
 
@@ -45,7 +45,7 @@ import org.pushingpixels.trident.callback.UIThreadTimelineCallbackAdapter;
 /**
  * Tracker for pulsating (default and focused) <code>JButton</code>s. This class
  * is <b>for internal use only</b>.
- * 
+ *
  * @author Kirill Grouchnikov
  */
 public class RootPaneDefaultButtonTracker extends
@@ -69,7 +69,7 @@ public class RootPaneDefaultButtonTracker extends
 
 	/**
 	 * Simple constructor.
-	 * 
+	 *
 	 * @param jbutton
 	 */
 	private RootPaneDefaultButtonTracker(JButton jbutton) {
@@ -85,7 +85,7 @@ public class RootPaneDefaultButtonTracker extends
 	/**
 	 * Recursively checks whether the specified component or one of its inner
 	 * components has focus.
-	 * 
+	 *
 	 * @param component
 	 *            Component to check.
 	 * @return <code>true</code> if the specified component or one of its inner
@@ -115,7 +115,7 @@ public class RootPaneDefaultButtonTracker extends
 	/**
 	 * Recursively checks whether the specified component has visible glass
 	 * pane.
-	 * 
+	 *
 	 * @param component
 	 *            Component to check.
 	 * @return <code>true</code> if the specified component has visible glass
@@ -170,9 +170,13 @@ public class RootPaneDefaultButtonTracker extends
 		if (!isPulsating(jButton)) {
 			// has since lost its default status
 			RootPaneDefaultButtonTracker tracker = trackers.get(jButton);
-			tracker.stopTimer();
-			tracker.buttonRef.clear();
-			trackers.remove(jButton);
+      if (tracker != null) {
+        // value has been observed to be null in rare cases, so check for it;
+        // https://github.com/Insubstantial/insubstantial/issues/137
+  			tracker.stopTimer();
+	  		tracker.buttonRef.clear();
+  			trackers.remove(jButton);
+      }
 		} else {
 			if (!RootPaneDefaultButtonTracker.isInFocusedWindow(jButton
 					.getTopLevelAncestor())) {
@@ -228,7 +232,7 @@ public class RootPaneDefaultButtonTracker extends
 
 	/**
 	 * Returns the status of the associated timer.
-	 * 
+	 *
 	 * @return <code>true</code> is the associated timer is running,
 	 *         <code>false</code> otherwise.
 	 */
@@ -240,7 +244,7 @@ public class RootPaneDefaultButtonTracker extends
 	/**
 	 * Updates the state of the specified button which must be a default button
 	 * in some window. The button state is determined based on focus ownership.
-	 * 
+	 *
 	 * @param jButton
 	 *            Button.
 	 */
@@ -268,8 +272,8 @@ public class RootPaneDefaultButtonTracker extends
 				return;
 			}
 			tracker = new RootPaneDefaultButtonTracker(jButton);
-			tracker.startTimer();
 			trackers.put(jButton, tracker);
+			tracker.startTimer();
 			// long initialCycle = isAttentionDrawingCloseButton(jButton) ? -80
 			// : 0;
 			// cycles.put(jButton, initialCycle);
@@ -279,7 +283,7 @@ public class RootPaneDefaultButtonTracker extends
 
 	/**
 	 * Retrieves the current cycle count for the specified button.
-	 * 
+	 *
 	 * @param jButton
 	 *            Button.
 	 * @return Current cycle count for the specified button.
@@ -301,7 +305,7 @@ public class RootPaneDefaultButtonTracker extends
 
 	/**
 	 * Retrieves the animation state for the specified button.
-	 * 
+	 *
 	 * @param jButton
 	 *            Button.
 	 * @return <code>true</code> if the specified button is being animated,
@@ -317,7 +321,7 @@ public class RootPaneDefaultButtonTracker extends
 
 	/**
 	 * Returns memory usage.
-	 * 
+	 *
 	 * @return Memory usage string.
 	 */
 	static String getMemoryUsage() {
@@ -379,7 +383,7 @@ public class RootPaneDefaultButtonTracker extends
 
 	/**
 	 * Checks whether the specified button is pulsating.
-	 * 
+	 *
 	 * @param jButton
 	 *            Button.
 	 * @return <code>true</code> if the specified button is pulsating,
