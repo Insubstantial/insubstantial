@@ -29,11 +29,33 @@
  */
 package org.pushingpixels.substance.internal.utils;
 
-import java.awt.*;
+import java.awt.Color;
+import java.awt.Component;
+import java.awt.Container;
+import java.awt.FontMetrics;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
+import java.awt.KeyEventPostProcessor;
+import java.awt.KeyboardFocusManager;
+import java.awt.Rectangle;
+import java.awt.RenderingHints;
+import java.awt.Shape;
+import java.awt.Window;
+import java.awt.event.KeyEvent;
 import java.awt.geom.AffineTransform;
-import java.awt.image.*;
+import java.awt.image.BufferedImage;
+import java.awt.image.ConvolveOp;
+import java.awt.image.Kernel;
 
-import javax.swing.*;
+import javax.swing.AbstractButton;
+import javax.swing.ButtonModel;
+import javax.swing.CellRendererPane;
+import javax.swing.JComponent;
+import javax.swing.JLabel;
+import javax.swing.JMenuItem;
+import javax.swing.JRootPane;
+import javax.swing.SwingUtilities;
+import javax.swing.UIManager;
 import javax.swing.border.Border;
 import javax.swing.border.CompoundBorder;
 import javax.swing.plaf.ComponentUI;
@@ -43,7 +65,9 @@ import javax.swing.text.JTextComponent;
 import org.pushingpixels.lafwidget.LafWidgetUtilities;
 import org.pushingpixels.lafwidget.text.LockBorder;
 import org.pushingpixels.lafwidget.utils.RenderingUtils;
-import org.pushingpixels.substance.api.*;
+import org.pushingpixels.substance.api.ComponentState;
+import org.pushingpixels.substance.api.ComponentStateFacet;
+import org.pushingpixels.substance.api.SubstanceLookAndFeel;
 import org.pushingpixels.substance.api.watermark.SubstanceWatermark;
 import org.pushingpixels.substance.internal.animation.StateTransitionTracker;
 import org.pushingpixels.substance.internal.animation.TransitionAwareUI;
@@ -158,6 +182,8 @@ public class SubstanceTextUtilities {
 			g2d.clip(clip);
 		if (transform != null)
 			g2d.transform(transform);
+		if (SubstanceTextUtilities.isMnemonicHidden)
+			mnemonicIndex = -1;
 		BasicGraphicsUtils.drawStringUnderlineCharAt(g2d, text, mnemonicIndex,
 				textRect.x, textRect.y + g2d.getFontMetrics().getAscent());
 		g2d.dispose();
@@ -596,5 +622,136 @@ public class SubstanceTextUtilities {
 		}
 
 		g2d.dispose();
+	}
+	
+	protected static boolean isMnemonicHidden = true; // default true
+	
+	static AltProcessor altProcessor = new AltProcessor();
+	
+	/**
+	 * Adds the (singelton) AltProcessor instance to the KeyboardFocusManager.
+	 * Usually used in the initialize() method of a LookAndFeel class.
+	 */
+	public static void addToKeyboardFocusListener()
+	{
+		KeyboardFocusManager.getCurrentKeyboardFocusManager().addKeyEventPostProcessor(SubstanceTextUtilities.getInstance());
+	}
+	
+	/**
+	 * Removes the (singelton) AltProcessor instance to the KeyboardFocusManager.
+	 * Usually used in the uninitialize() method of a LookAndFeel class.
+	 */
+	public static void removeFromKeyboardFocusListener()
+	{
+		KeyboardFocusManager.getCurrentKeyboardFocusManager().removeKeyEventPostProcessor(SubstanceTextUtilities.getInstance());
+	}
+	
+	public static void setMnemonicHidden(final boolean hide)
+	{
+		if (UIManager.getBoolean("Button.showMnemonics"))
+		{
+			// Do not hide mnemonics if the UI defaults do not support this
+			isMnemonicHidden = false;
+		}
+		else
+		{
+			isMnemonicHidden = hide;
+		}
+	}
+	
+	/**
+	 * Gets the state of the hide mnemonic flag. This only has meaning if this feature is supported by the underlying OS.
+	 * 
+	 * @return true if mnemonics are hidden, otherwise, false
+	 * @see #setMnemonicHidden
+	 * @since 1.4
+	 */
+	public static boolean isMnemonicHidden()
+	{
+		if (UIManager.getBoolean("Button.showMnemonics"))
+		{
+			// Do not hide mnemonics if the UI defaults do not support this
+			isMnemonicHidden = false;
+		}
+		return isMnemonicHidden;
+	}
+	
+	public static KeyEventPostProcessor getInstance()
+	{
+		return altProcessor;
+	}
+	
+	
+	protected static class AltProcessor implements KeyEventPostProcessor
+	{
+		public boolean postProcessKeyEvent(final KeyEvent ev)
+		{
+			if (ev.getKeyCode() != KeyEvent.VK_ALT)
+			{
+				return false;
+			}
+			
+			final JRootPane root = SwingUtilities.getRootPane(ev.getComponent());
+			final Window winAncestor = (root == null ? null : SwingUtilities.getWindowAncestor(root));
+			
+			switch (ev.getID())
+			{
+				case KeyEvent.KEY_PRESSED:
+					setMnemonicHidden(false);
+					break;
+				case KeyEvent.KEY_RELEASED:
+					setMnemonicHidden(true);
+					break;
+			}
+			
+			repaintMnemonicsInWindow(winAncestor);
+			
+			return false;
+		}
+	}
+	
+	static void repaintMnemonicsInWindow(final Window w)
+	{
+		if (w == null || !w.isShowing())
+		{
+			return;
+		}
+		
+		final Window[] ownedWindows = w.getOwnedWindows();
+		for (final Window element : ownedWindows)
+		{
+			repaintMnemonicsInWindow(element);
+		}
+		
+		repaintMnemonicsInContainer(w);
+	}
+	
+	static void repaintMnemonicsInContainer(final Container cont)
+	{
+		for (int i = 0; i < cont.getComponentCount(); i++)
+		{
+			final Component c = cont.getComponent(i);
+			if (c == null || !c.isVisible())
+			{
+				continue;
+			}
+			
+			if (c instanceof AbstractButton && ((AbstractButton) c).getMnemonic() != '\0')
+			{
+				c.repaint();
+				continue;
+			}
+			
+			if (c instanceof JLabel && ((JLabel) c).getDisplayedMnemonic() != '\0')
+			{
+				c.repaint();
+				continue;
+			}
+			
+			if (c instanceof Container)
+			{
+				repaintMnemonicsInContainer((Container) c);
+			}
+		}
 	}
 }

@@ -29,19 +29,51 @@
  */
 package org.pushingpixels.substance.api;
 
-import java.awt.*;
+import java.awt.AlphaComposite;
+import java.awt.Color;
+import java.awt.Component;
+import java.awt.Font;
+import java.awt.Graphics2D;
+import java.awt.KeyboardFocusManager;
+import java.awt.Window;
 import java.awt.image.BufferedImage;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.lang.reflect.InvocationTargetException;
-import java.util.*;
+import java.util.Collections;
+import java.util.Enumeration;
+import java.util.HashSet;
+import java.util.Locale;
+import java.util.Map;
+import java.util.ResourceBundle;
+import java.util.Set;
+import java.util.TreeMap;
 
-import javax.swing.*;
+import javax.swing.Icon;
+import javax.swing.ImageIcon;
+import javax.swing.JButton;
+import javax.swing.JComboBox;
+import javax.swing.JComponent;
+import javax.swing.JDialog;
+import javax.swing.JFrame;
+import javax.swing.JInternalFrame;
+import javax.swing.JPasswordField;
+import javax.swing.JRootPane;
+import javax.swing.JScrollPane;
+import javax.swing.JTabbedPane;
+import javax.swing.LookAndFeel;
+import javax.swing.SwingConstants;
+import javax.swing.SwingUtilities;
+import javax.swing.UIDefaults;
+import javax.swing.UIManager;
+import javax.swing.UnsupportedLookAndFeelException;
 import javax.swing.plaf.IconUIResource;
 import javax.swing.plaf.UIResource;
 import javax.swing.plaf.basic.BasicLookAndFeel;
 
-import org.pushingpixels.lafplugin.*;
+import org.pushingpixels.lafplugin.ComponentPluginManager;
+import org.pushingpixels.lafplugin.LafPlugin;
+import org.pushingpixels.lafplugin.PluginManager;
 import org.pushingpixels.lafwidget.LafWidgetRepository;
 import org.pushingpixels.lafwidget.animation.AnimationConfigurationManager;
 import org.pushingpixels.lafwidget.animation.AnimationFacet;
@@ -49,10 +81,14 @@ import org.pushingpixels.lafwidget.utils.LookUtils;
 import org.pushingpixels.substance.api.SubstanceConstants.MenuGutterFillKind;
 import org.pushingpixels.substance.api.SubstanceConstants.SubstanceWidgetType;
 import org.pushingpixels.substance.api.combo.ComboPopupPrototypeCallback;
-import org.pushingpixels.substance.api.fonts.*;
+import org.pushingpixels.substance.api.fonts.FontPolicy;
+import org.pushingpixels.substance.api.fonts.FontSet;
+import org.pushingpixels.substance.api.fonts.SubstanceFontUtilities;
 import org.pushingpixels.substance.api.inputmaps.InputMapSet;
 import org.pushingpixels.substance.api.inputmaps.SubstanceInputMapUtilities;
-import org.pushingpixels.substance.api.shaper.*;
+import org.pushingpixels.substance.api.shaper.ClassicButtonShaper;
+import org.pushingpixels.substance.api.shaper.StandardButtonShaper;
+import org.pushingpixels.substance.api.shaper.SubstanceButtonShaper;
 import org.pushingpixels.substance.api.skin.SkinChangeListener;
 import org.pushingpixels.substance.api.skin.SkinInfo;
 import org.pushingpixels.substance.api.tabbed.BaseTabCloseListener;
@@ -62,7 +98,18 @@ import org.pushingpixels.substance.internal.fonts.FontPolicies;
 import org.pushingpixels.substance.internal.painter.DecorationPainterUtils;
 import org.pushingpixels.substance.internal.plugin.SubstanceSkinPlugin;
 import org.pushingpixels.substance.internal.ui.SubstanceRootPaneUI;
-import org.pushingpixels.substance.internal.utils.*;
+import org.pushingpixels.substance.internal.utils.LazyResettableHashMap;
+import org.pushingpixels.substance.internal.utils.LocaleChangeListener;
+import org.pushingpixels.substance.internal.utils.MemoryAnalyzer;
+import org.pushingpixels.substance.internal.utils.SubstanceColorSchemeUtilities;
+import org.pushingpixels.substance.internal.utils.SubstanceCoreUtilities;
+import org.pushingpixels.substance.internal.utils.SubstanceImageCreator;
+import org.pushingpixels.substance.internal.utils.SubstanceSizeUtils;
+import org.pushingpixels.substance.internal.utils.SubstanceTextUtilities;
+import org.pushingpixels.substance.internal.utils.SubstanceTitlePane;
+import org.pushingpixels.substance.internal.utils.SubstanceWidgetManager;
+import org.pushingpixels.substance.internal.utils.SubstanceWidgetSupport;
+import org.pushingpixels.substance.internal.utils.TabCloseListenerManager;
 
 /**
  * <p>
@@ -1778,6 +1825,7 @@ public abstract class SubstanceLookAndFeel extends BasicLookAndFeel {
 	@Override
 	public void initialize() {
 		super.initialize();
+		SubstanceTextUtilities.addToKeyboardFocusListener();
 		ShadowPopupFactory.install();
 
 		setSkin(this.skin, false);
@@ -1855,6 +1903,7 @@ public abstract class SubstanceLookAndFeel extends BasicLookAndFeel {
 	@Override
 	public void uninitialize() {
 		super.uninitialize();
+		SubstanceTextUtilities.removeFromKeyboardFocusListener();
 
 		SubstanceLookAndFeel.currentSkin = null;
 
