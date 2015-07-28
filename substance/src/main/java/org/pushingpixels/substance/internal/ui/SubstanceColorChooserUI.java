@@ -86,6 +86,6 @@ public class SubstanceColorChooserUI extends Quaqua14ColorChooserUI {
 						+ defaultChoosers[i]);
 			}
 		}
-		return panelList.toArray(new AbstractColorChooserPanel[0]);
+		return panelList.toArray(new AbstractColorChooserPanel[panelList.size()]);
 	}
 }

@@ -2834,7 +2834,7 @@ public class SubstanceScrollBarUI extends BasicScrollBarUI implements
 					bmList.add(secondary.getModel());
 				}
 			}
-			this.secondaryModels = bmList.toArray(new ButtonModel[0]);
+			this.secondaryModels = bmList.toArray(new ButtonModel[bmList.size()]);
 
 			this.listener = new ChangeListener() {
 				@Override

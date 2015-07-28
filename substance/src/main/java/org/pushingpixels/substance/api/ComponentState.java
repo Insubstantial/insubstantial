@@ -433,7 +433,7 @@ public final class ComponentState {
 			if (state.isActive())
 				states.add(state);
 		}
-		return states.toArray(new ComponentState[0]);
+		return states.toArray(new ComponentState[states.size()]);
 	}
 
 	/**

@@ -82,7 +82,7 @@ public class JColorSelectorPopupMenu extends JCommandPopupMenu {
 
 	public void addRecentSection(String label) {
 		JPanel recent = new SingleRowSelector(recentlySelected
-				.toArray(new Color[0]));
+				.toArray(new Color[recentlySelected.size()]));
 		JColorSelectorPanel recentPanel = new JColorSelectorPanel(label, recent);
 		recentPanel.setLastPanel(true);
 		this.addMenuPanel(recentPanel);
