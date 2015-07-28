@@ -101,8 +101,7 @@ public class ColorSchemeFilter extends AbstractFilter {
 				.getColorBrightness(scheme.getUltraDarkColor().getRGB()),
 				scheme.getUltraDarkColor());
 
-		List<Integer> schemeBrightness = new ArrayList<Integer>();
-		schemeBrightness.addAll(schemeColorMapping.keySet());
+		List<Integer> schemeBrightness = new ArrayList<Integer>(schemeColorMapping.keySet());
 		Collections.sort(schemeBrightness);
 
 		int lowestSchemeBrightness = schemeBrightness.get(0);
@@ -118,8 +117,7 @@ public class ColorSchemeFilter extends AbstractFilter {
 					/ (highestSchemeBrightness - lowestSchemeBrightness);
 			stretchedColorMapping.put(stretched, entry.getValue());
 		}
-		schemeBrightness = new ArrayList<Integer>();
-		schemeBrightness.addAll(stretchedColorMapping.keySet());
+		schemeBrightness = new ArrayList<Integer>(stretchedColorMapping.keySet());
 		Collections.sort(schemeBrightness);
 
 		this.interpolated = new int[MAPSTEPS];
