@@ -210,10 +210,15 @@ public class StateTransitionTracker {
 		// notify listeners on focus state transition
 		this.focusTimeline.addCallback(new TimelineCallbackAdapter() {
 			@Override
-			public void onTimelineStateChanged(TimelineState oldState,
-					TimelineState newState, float durationFraction,
+			public void onTimelineStateChanged(final TimelineState oldState,
+					final TimelineState newState, float durationFraction,
 					float timelinePosition) {
-				fireFocusStateTransitionEvent(oldState, newState);
+				SwingUtilities.invokeLater(new Runnable() {
+					@Override
+					public void run() {
+						fireFocusStateTransitionEvent(oldState, newState);
+					}
+				});
 			}
 		});
 
