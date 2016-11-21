@@ -35,7 +35,7 @@ import tools.docrobot.SkinRobot;
 
 /**
  * Screenshot robot for {@link org.pushingpixels.substance.api.skin.CeruleanSkin}.
- * 
+ *
  * @author Kirill Grouchnikov
  */
 public class Cerulean extends SkinRobot {
@@ -44,7 +44,7 @@ public class Cerulean extends SkinRobot {
 	 */
 	public Cerulean() {
 		super(
-				new Cerulean(),
+				new CeruleanSkin(),
 				"/Users/kirillg/JProjects/substance-flamingo/www/images/screenshots/skins/cerulean");
 	}
 }
