@@ -9,3 +9,6 @@ www/webstart/*.jar
 .classpath
 .project
 .settings
+# NetBeans files: .nb-gradle/ (directory) and .nb-gradle-properties
+**/.nb-gradle/
+**/.nb-gradle-properties
