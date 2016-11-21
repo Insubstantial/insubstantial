@@ -51,14 +51,14 @@ import org.pushingpixels.substance.internal.utils.filters.*;
 /**
  * Provides utility functions for creating various images for <b>Substance </b>
  * look and feel. This class is <b>for internal use only</b>.
- * 
+ *
  * @author Kirill Grouchnikov
  */
 public final class SubstanceImageCreator {
 	/**
 	 * Custom fill painter for filling the checkmarks of checkboxes and radio
 	 * buttons.
-	 * 
+	 *
 	 * @author Kirill Grouchnikov
 	 */
 	public static class SimplisticSoftBorderReverseFillPainter extends
@@ -92,7 +92,7 @@ public final class SubstanceImageCreator {
 
 	/**
 	 * Paints border instance of specified dimensions and status.
-	 * 
+	 *
 	 * @param c
 	 *            Component.
 	 * @param graphics
@@ -139,7 +139,7 @@ public final class SubstanceImageCreator {
 
 	/**
 	 * Paints border instance of specified dimensions and status.
-	 * 
+	 *
 	 * @param c
 	 *            Component.
 	 * @param graphics
@@ -243,7 +243,7 @@ public final class SubstanceImageCreator {
 
 	/**
 	 * Retrieves check mark image.
-	 * 
+	 *
 	 * @param dimension
 	 *            Check mark dimension.
 	 * @param isEnabled
@@ -293,7 +293,7 @@ public final class SubstanceImageCreator {
 
 	/**
 	 * Returns arrow icon for the specified parameters.
-	 * 
+	 *
 	 * @param fontSize
 	 *            Font size.
 	 * @param direction
@@ -315,7 +315,7 @@ public final class SubstanceImageCreator {
 
 	/**
 	 * Retrieves arrow icon.
-	 * 
+	 *
 	 * @param width
 	 *            Arrow width.
 	 * @param height
@@ -340,7 +340,7 @@ public final class SubstanceImageCreator {
 
 	/**
 	 * Retrieves arrow image.
-	 * 
+	 *
 	 * @param width
 	 *            Arrow width.
 	 * @param height
@@ -433,7 +433,7 @@ public final class SubstanceImageCreator {
 
 	/**
 	 * Returns double arrow icon for the specified parameters.
-	 * 
+	 *
 	 * @param fontSize
 	 *            Font size.
 	 * @param deltaWidth
@@ -463,7 +463,7 @@ public final class SubstanceImageCreator {
 
 	/**
 	 * Retrieves arrow icon.
-	 * 
+	 *
 	 * @param width
 	 *            Arrow width.
 	 * @param height
@@ -533,7 +533,7 @@ public final class SubstanceImageCreator {
 
 	/**
 	 * Returns rotated image.
-	 * 
+	 *
 	 * @param bi
 	 *            Image to rotate.
 	 * @param quadrantClockwise
@@ -576,7 +576,7 @@ public final class SubstanceImageCreator {
 
 	/**
 	 * Returns rotated image.
-	 * 
+	 *
 	 * @param bi
 	 *            Image to rotate.
 	 * @param quadrantClockwise
@@ -619,7 +619,7 @@ public final class SubstanceImageCreator {
 
 	/**
 	 * Translated the specified icon to grey scale.
-	 * 
+	 *
 	 * @param icon
 	 *            Icon.
 	 * @return Greyscale version of the specified icon.
@@ -641,7 +641,7 @@ public final class SubstanceImageCreator {
 
 	/**
 	 * Makes the specified icon transparent.
-	 * 
+	 *
 	 * @param c
 	 *            Component.
 	 * @param icon
@@ -799,7 +799,7 @@ public final class SubstanceImageCreator {
 	/**
 	 * Retrieves radio button of the specified size that matches the specified
 	 * parameters.
-	 * 
+	 *
 	 * @param component
 	 *            Component.
 	 * @param dimension
@@ -877,8 +877,12 @@ public final class SubstanceImageCreator {
 			Shape markOval = new Ellipse2D.Double(rc - radius, rc - radius,
 					2 * radius, 2 * radius);
 
+      // Avoid exception by making sure the alpha value is in the correct range.
+      // https://github.com/Insubstantial/insubstantial/issues/138
+      float alphaTimesVisibility = Math.max(0.0f, Math.min(1.0f, alpha * checkMarkVisibility));
+
 			graphics.setComposite(AlphaComposite.getInstance(
-					AlphaComposite.SRC_OVER, alpha * checkMarkVisibility));
+					AlphaComposite.SRC_OVER, alphaTimesVisibility));
 			drawRadioMark(graphics, SubstanceColorUtilities.getMarkColor(
 					markColorScheme, !componentState.isDisabled()), markOval);
 		} else {
@@ -899,7 +903,7 @@ public final class SubstanceImageCreator {
 
 	/**
 	 * Draws radio mark.
-	 * 
+	 *
 	 * @param graphics
 	 *            Graphics context.
 	 * @param color
@@ -916,7 +920,7 @@ public final class SubstanceImageCreator {
 	/**
 	 * Retrieves check box of the specified size that matches the specified
 	 * component state.
-	 * 
+	 *
 	 * @param button
 	 *            Button for the check mark.
 	 * @param dimension
@@ -1028,7 +1032,7 @@ public final class SubstanceImageCreator {
 	 * </ol>
 	 * Combined together, the layers create the image for scrollbar track with
 	 * continuation of the arrow increase and decrease buttons.
-	 * 
+	 *
 	 * @param component
 	 *            Component.
 	 * @param width
@@ -1083,7 +1087,7 @@ public final class SubstanceImageCreator {
 
 	/**
 	 * Overlays light-colored echo below the specified image.
-	 * 
+	 *
 	 * @param image
 	 *            The input image.
 	 * @param echoAlpha
@@ -1133,7 +1137,7 @@ public final class SubstanceImageCreator {
 
 	/**
 	 * Returns <code>minimize</code> icon.
-	 * 
+	 *
 	 * @param scheme
 	 *            Color scheme for the icon.
 	 * @return <code>Minimize</code> icon.
@@ -1146,7 +1150,7 @@ public final class SubstanceImageCreator {
 
 	/**
 	 * Returns <code>minimize</code> icon.
-	 * 
+	 *
 	 * @param iSize
 	 *            Icon dimension.
 	 * @param scheme
@@ -1182,7 +1186,7 @@ public final class SubstanceImageCreator {
 
 	/**
 	 * Returns <code>restore</code> icon.
-	 * 
+	 *
 	 * @param scheme
 	 *            Color scheme for the icon.
 	 * @return <code>Restore</code> icon.
@@ -1222,7 +1226,7 @@ public final class SubstanceImageCreator {
 
 	/**
 	 * Returns <code>maximize</code> icon.
-	 * 
+	 *
 	 * @param scheme
 	 *            Color scheme for the icon.
 	 * @return <code>Maximize</code> icon.
@@ -1235,7 +1239,7 @@ public final class SubstanceImageCreator {
 
 	/**
 	 * Returns <code>maximize</code> icon.
-	 * 
+	 *
 	 * @param iSize
 	 *            Icon dimension.
 	 * @param scheme
@@ -1271,7 +1275,7 @@ public final class SubstanceImageCreator {
 
 	/**
 	 * Returns <code>close</code> icon.
-	 * 
+	 *
 	 * @param scheme
 	 *            Color scheme for the icon.
 	 * @return <code>Close</code> icon.
@@ -1285,7 +1289,7 @@ public final class SubstanceImageCreator {
 
 	/**
 	 * Returns <code>close</code> icon.
-	 * 
+	 *
 	 * @param iSize
 	 *            Icon dimension.
 	 * @param colorScheme
@@ -1346,7 +1350,7 @@ public final class SubstanceImageCreator {
 
 	/**
 	 * Paints rectangular gradient background.
-	 * 
+	 *
 	 * @param g
 	 *            Graphic context.
 	 * @param startX
@@ -1408,7 +1412,7 @@ public final class SubstanceImageCreator {
 
 	/**
 	 * Paints simple border.
-	 * 
+	 *
 	 * @param g2d
 	 *            Graphics context.
 	 * @param width
@@ -1472,7 +1476,7 @@ public final class SubstanceImageCreator {
 	/**
 	 * Paints rectangular gradient background with spots and optional replicated
 	 * stripe image.
-	 * 
+	 *
 	 * @param g
 	 *            Graphics context.
 	 * @param startX
@@ -1557,7 +1561,7 @@ public final class SubstanceImageCreator {
 
 	/**
 	 * Returns diagonal stripe image.
-	 * 
+	 *
 	 * @param baseSize
 	 *            Stripe base in pixels.
 	 * @param color
@@ -1594,7 +1598,7 @@ public final class SubstanceImageCreator {
 
 	/**
 	 * Returns drag bumps image.
-	 * 
+	 *
 	 * @param c
 	 *            Component.
 	 * @param colorScheme
@@ -1665,7 +1669,7 @@ public final class SubstanceImageCreator {
 
 	/**
 	 * Paints the bump dots on the split pane dividers.
-	 * 
+	 *
 	 * @param g
 	 *            Graphics context.
 	 * @param divider
@@ -1739,7 +1743,7 @@ public final class SubstanceImageCreator {
 
 	/**
 	 * Returns resize grip image.
-	 * 
+	 *
 	 * @param c
 	 *            Component.
 	 * @param colorScheme
@@ -1801,7 +1805,7 @@ public final class SubstanceImageCreator {
 
 	/**
 	 * Retrieves tree icon.
-	 * 
+	 *
 	 * @param tree
 	 *            Tree.
 	 * @param fillScheme
@@ -1871,7 +1875,7 @@ public final class SubstanceImageCreator {
 	/**
 	 * Retrieves a single crayon of the specified color and dimensions for the
 	 * crayon panel in color chooser.
-	 * 
+	 *
 	 * @param mainColor
 	 *            Crayon main color.
 	 * @param width
@@ -2028,7 +2032,7 @@ public final class SubstanceImageCreator {
 
 	/**
 	 * Retrieves crayon X offset.
-	 * 
+	 *
 	 * @param i
 	 *            Crayon index.
 	 * @return Crayon X offset.
@@ -2039,7 +2043,7 @@ public final class SubstanceImageCreator {
 
 	/**
 	 * Retrieves crayon Y offset.
-	 * 
+	 *
 	 * @param i
 	 *            Crayon index.
 	 * @return Crayon Y offset.
@@ -2050,7 +2054,7 @@ public final class SubstanceImageCreator {
 
 	/**
 	 * Retrieves crayons image for the crayon panel of color chooser.
-	 * 
+	 *
 	 * @return Crayons image.
 	 */
 	public static Image getCrayonsImage() {
@@ -2084,7 +2088,7 @@ public final class SubstanceImageCreator {
 	 * Returns small icon representation of the specified integer value. The
 	 * remainder of dividing the integer by 16 is translated to four circles
 	 * arranged in 2*2 grid.
-	 * 
+	 *
 	 * @param value
 	 *            Integer value to represent.
 	 * @param colorScheme
@@ -2131,7 +2135,7 @@ public final class SubstanceImageCreator {
 
 	/**
 	 * Returns search icon.
-	 * 
+	 *
 	 * @param dimension
 	 *            Icon dimension.
 	 * @param colorScheme
@@ -2187,7 +2191,7 @@ public final class SubstanceImageCreator {
 
 	/**
 	 * Returns an icon that matches the specified watermark.
-	 * 
+	 *
 	 * @param watermark
 	 *            Watermark instance.
 	 * @return Icon that matches the specified watermark.
@@ -2210,7 +2214,7 @@ public final class SubstanceImageCreator {
 
 	/**
 	 * Returns a lock icon that matches the specified scheme.
-	 * 
+	 *
 	 * @param scheme
 	 *            Scheme instance.
 	 * @return Lock icon that matches the specified scheme.
@@ -2286,7 +2290,7 @@ public final class SubstanceImageCreator {
 
 	/**
 	 * Returns the negative of the specified image.
-	 * 
+	 *
 	 * @param bi
 	 *            Image.
 	 * @return The negative of the specified image.
@@ -2298,7 +2302,7 @@ public final class SubstanceImageCreator {
 	/**
 	 * Creates a new version of the specified icon that is rendered in the
 	 * colors of the specified color scheme.
-	 * 
+	 *
 	 * @param comp
 	 *            Component.
 	 * @param original
@@ -2322,7 +2326,7 @@ public final class SubstanceImageCreator {
 	/**
 	 * Creates a new version of the specified image that is rendered in the
 	 * colors of the specified color scheme.
-	 * 
+	 *
 	 * @param original
 	 *            The original image.
 	 * @param colorScheme
