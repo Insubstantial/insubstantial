@@ -194,7 +194,9 @@ public final class ShadowPopup extends Popup {
         if (heavyWeightContainer != null) {
             snapshot();
         }
-        popup.show();
+        if (popup != null) {
+            popup.show();
+        }
     }
 
     /**
